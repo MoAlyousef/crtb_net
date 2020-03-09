@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+// handler signature: void (*) (const rtb_request*, rtb_response*, void*);
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args);
 
 int main() {
@@ -21,7 +22,7 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   int index;
   int i;
   for (i = 0; i < 1; i++) {
-    if (strcmp(placeholders[i].key, "name") == 0)
+    if (strcmp(placeholders[i].key, "name") == 0) // just to show it's queryable by key
       index = i;
   }
   const char *name = placeholders[index].value;
