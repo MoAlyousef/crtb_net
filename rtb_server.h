@@ -27,7 +27,7 @@ rtb_server *rtb_server_init(const char *host, unsigned int port,
                             const char *docroot);
 
 void rtb_server_route(rtb_server *, const char *method, const char *path,
-                      rtb_request_handler handler, void *ctx);
+                      rtb_request_handler handler, void *args);
 
 void rtb_server_enable_logging(rtb_server *, int boolean);
 
