@@ -17,7 +17,7 @@ int main() {
 
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   rtb_request_placeholder placeholders[1];
-  rtb_request_placeholders(req, placeholders, 1);
+  rtb_request_get_placeholders(req, placeholders, 1);
   int index;
   int i;
   for (i = 0; i < 1; i++) {
