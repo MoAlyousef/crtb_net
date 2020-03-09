@@ -1,0 +1,3 @@
+-xc++
+-I../rtb/include
+-std=c++17
