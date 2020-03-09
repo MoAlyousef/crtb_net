@@ -35,18 +35,18 @@ void rtb_server_run(rtb_server *server);
 
 void rtb_server_free(rtb_server *server);
 
-const char *rtb_request_get_headers(const rtb_request *req);
+const char *rtb_request_headers_to_string(const rtb_request *req);
 
 const char *rtb_request_method(const rtb_request *req);
 
 const char *rtb_request_uri(const rtb_request *req);
 
-void rtb_request_headers(const rtb_request *req, rtb_header *headers, int sz);
+void rtb_request_get_headers(const rtb_request *req, rtb_header *headers, int sz);
 
-void rtb_request_regex_placeholders(const rtb_request *req,
+void rtb_request_get_regex_placeholders(const rtb_request *req,
                                     rtb_request_regex_placeholder *arr, int sz);
 
-void rtb_request_placeholders(const rtb_request *req,
+void rtb_request_get_placeholders(const rtb_request *req,
                               rtb_request_placeholder *arr, int sz);
 
 const char *rtb_request_body(const rtb_request *req);
