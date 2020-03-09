@@ -33,7 +33,7 @@ void rtb_server_free(rtb_server *server) {
   free(static_cast<net::HttpServer *>(server));
 }
 
-const char *rtb_request_get_headers(const rtb_request *req) {
+const char *rtb_request_headers_to_string(const rtb_request *req) {
   return static_cast<const net::Request *>(req)->get_headers().c_str();
 }
 
@@ -45,7 +45,7 @@ const char *rtb_request_uri(const rtb_request *req) {
   return static_cast<const net::Request *>(req)->uri.c_str();
 }
 
-void rtb_request_headers(const rtb_request *req, rtb_header *headers, int sz) {
+void rtb_request_get_headers(const rtb_request *req, rtb_header *headers, int sz) {
   auto hdrs = static_cast<const net::Request *>(req)->headers;
   auto size = hdrs.size();
   if (size > sz)
@@ -56,7 +56,7 @@ void rtb_request_headers(const rtb_request *req, rtb_header *headers, int sz) {
   }
 }
 
-void rtb_request_regex_placeholders(const rtb_request *req,
+void rtb_request_get_regex_placeholders(const rtb_request *req,
                                     rtb_request_regex_placeholder *arr,
                                     int sz) {
   auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
@@ -69,7 +69,7 @@ void rtb_request_regex_placeholders(const rtb_request *req,
   }
 }
 
-void rtb_request_placeholders(const rtb_request *req,
+void rtb_request_get_placeholders(const rtb_request *req,
                               rtb_request_placeholder *arr, int sz) {
   auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
   auto size = ph.size();
