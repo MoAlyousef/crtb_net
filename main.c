@@ -8,6 +8,7 @@ int main() {
   rtb_server *server = rtb_server_init("127.0.0.1", 8000, ".");
   if (!server)
     return -1;
+  // try address 127.0.0.1:8000/hello/anyname
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
   rtb_server_run(server);
   rtb_server_free(server); // only called if running failed
