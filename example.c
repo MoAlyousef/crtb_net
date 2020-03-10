@@ -8,10 +8,12 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args);
 int main() {
   unsigned int thread_count = rtb_hardware_concurrency();
   // init signature: (host, port, document_root, thread_count)
+  // the server would now automatically serve statically from docroot
   rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot", thread_count);
   if (!server)
     return -1;
   // route signature: (server, verb, uri, handler, args or context)
+  // this allows dynamic request handling
   // try address 127.0.0.1:8000/hello/anyname
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
   rtb_server_run(server);
@@ -37,5 +39,8 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
            "<body><h1>Hello %s</h1></body>"
            "</html>",
            name);
+  // setting the response status in a handler is optional for OK
+  rtb_response_set_status(resp, 200);
+  // setting content will automatically set content_length
   rtb_response_set_content(resp, content);
 }
