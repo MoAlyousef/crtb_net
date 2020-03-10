@@ -85,6 +85,8 @@ const char *rtb_response_location(rtb_response *res);
 
 const char *rtb_response_headers_to_string(rtb_response *res);
 
+unsigned int rtb_hardware_concurrency(void);
+
 #ifdef __cplusplus
 }
 #endif
