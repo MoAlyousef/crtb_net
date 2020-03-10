@@ -4,9 +4,9 @@
 using namespace rtb;
 
 rtb_server *rtb_server_init(const char *host, unsigned int port,
-                            const char *docroot) {
+                            const char *docroot, unsigned int threads) {
   return new (std::nothrow)
-      net::HttpServer(net::HttpServer::init(host, port, docroot));
+      net::HttpServer(net::HttpServer::init(host, port, docroot, threads));
 }
 
 void rtb_server_route(rtb_server *server, const char *method, const char *path,
