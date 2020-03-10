@@ -1,7 +1,7 @@
 # crtb_net
 C89 wrapper around rtb_net
 
-Build using cmake:
+Build using cmake or modify the build.sh script (if on a posix system):
 
 ```
 cmake -B bin
