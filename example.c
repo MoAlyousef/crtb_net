@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-/* handler signature: void (*) (const rtb_request*, rtb_response*, void*); */
+/* handler signature: void (*) (const rtb_request*, rtb_response*, void*) */
 void hello_handler(const rtb_request *req, rtb_response *resp, void*);
 
 int main() {
