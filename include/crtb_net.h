@@ -29,7 +29,7 @@ typedef void (*rtb_request_handler)(const rtb_request *req, rtb_response *resp,
                                     void *args);
 
 rtb_server *rtb_server_init(const char *host, unsigned int port,
-                            const char *docroot);
+                            const char *docroot, unsigned int threads);
 
 void rtb_server_route(rtb_server *, const char *method, const char *path,
                       rtb_request_handler handler, void *args);
