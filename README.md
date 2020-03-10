@@ -8,6 +8,7 @@ cmake -B bin
 camke --build bin
 ./server
 ```
+The build requires that the rtb lib (from github.com/moalyousef/rtb) be cloned into the same parent directory.
 
 The example server should listen on 127.0.0.1:8000 and should serve the pages in the docroot statically. Also any request to 127.0.0.1:8000/hello/{name} with the name placeholder accepting any string since it has an explicit handler.
 
