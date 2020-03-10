@@ -1,5 +1,5 @@
 # crtb_net
-C wrapper around rtb_net
+C89 wrapper around rtb_net
 
 Build using cmake:
 
