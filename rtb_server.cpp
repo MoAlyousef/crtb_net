@@ -141,7 +141,7 @@ const char *rtb_response_location(rtb_response *res) {
   return static_cast<net::Response *>(res)->location().c_str();
 }
 
-const char *rtb_response_get_headers(rtb_response *res) {
+const char *rtb_response_headers_to_string(rtb_response *res) {
   return static_cast<net::Response *>(res)->get_headers().c_str();
 }
 
