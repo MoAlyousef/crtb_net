@@ -28,7 +28,8 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   rtb_request_placeholder placeholders[1];
   rtb_request_get_placeholders(req, placeholders, 1);
   for (i = 0; i < 1; i++) {
-    if (strcmp(placeholders[i].key, "name") == 0) // just to show it's queryable by key
+    // just to show it's queryable by key
+    if (strcmp(placeholders[i].key, "name") == 0)
       index = i;
   }
   const char *name = placeholders[index].value;
