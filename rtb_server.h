@@ -83,7 +83,7 @@ const char *rtb_response_protocol(rtb_response *res);
 
 const char *rtb_response_location(rtb_response *res);
 
-const char *rtb_response_get_headers(rtb_response *res);
+const char *rtb_response_headers_to_string(rtb_response *res);
 
 #ifdef __cplusplus
 }
