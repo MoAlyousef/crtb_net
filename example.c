@@ -6,9 +6,12 @@
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args);
 
 int main() {
-  rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot");
+  unsigned int thread_count = rtb_hardware_concurrency();
+  // init signature: (host, port, document_root, thread_count)
+  rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot", thread_count);
   if (!server)
     return -1;
+  // route signature: (server, verb, uri, handler, args or context)
   // try address 127.0.0.1:8000/hello/anyname
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
   rtb_server_run(server);
@@ -27,7 +30,7 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   }
   const char *name = placeholders[index].value;
   char content[200];
-  snprintf(content, 200,
+  (void)snprintf(content, 200,
            "<html>"
            "<head><title>Hello</title></head>"
            "<body><h1>Hello %s</h1></body>"
