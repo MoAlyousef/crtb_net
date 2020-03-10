@@ -23,14 +23,12 @@ void rtb_server_enable_logging(rtb_server *server, int boolean) {
 
 void rtb_server_run(rtb_server *server) {
   auto retval = static_cast<net::HttpServer *>(server)->run();
-  if (!retval.is_err())
-    retval.unwrap();
-  else
+  if (retval.is_err())
     server = NULL;
 }
 
 void rtb_server_free(rtb_server *server) {
-  free(static_cast<net::HttpServer *>(server));
+  delete static_cast<net::HttpServer *>(server);
 }
 
 const char *rtb_request_headers_to_string(const rtb_request *req) {
@@ -50,7 +48,7 @@ void rtb_request_get_headers(const rtb_request *req, rtb_header *headers, int sz
   auto size = hdrs.size();
   if (size > sz)
     size = sz;
-  for (auto i = 0; i < sz; i++) {
+  for (auto i = 0; i < size; i++) {
     headers[i].name = hdrs[i].name.c_str();
     headers[i].value = hdrs[i].value.c_str();
   }
@@ -80,6 +78,7 @@ void rtb_request_get_placeholders(const rtb_request *req,
     arr[i].key = std::get<std::string>(kv.first).c_str();
     arr[i].value = kv.second.c_str();
     i++;
+    if (i == size) break;
   }
 }
 
@@ -145,6 +144,3 @@ const char *rtb_response_headers_to_string(rtb_response *res) {
   return static_cast<net::Response *>(res)->get_headers().c_str();
 }
 
-// #if 0
-// void temp() { net::Req }
-// #endif
