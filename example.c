@@ -6,7 +6,7 @@
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args);
 
 int main() {
-  rtb_server *server = rtb_server_init("127.0.0.1", 8000, ".");
+  rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot");
   if (!server)
     return -1;
   // try address 127.0.0.1:8000/hello/anyname
