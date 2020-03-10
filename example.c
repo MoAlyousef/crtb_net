@@ -19,7 +19,6 @@ int main() {
   rtb_server_run(server);
   /* only called if running failed */
   rtb_server_free(server);
-  return 0;
 }
 
 void hello_handler(const rtb_request *req, rtb_response *resp, void* /* args */) {
