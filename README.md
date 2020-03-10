@@ -6,7 +6,7 @@ Build using cmake or modify the build.sh script (if on a posix system):
 ```
 cmake -B bin
 camke --build bin
-./server
+./bin/server
 ```
 The build requires that the rtb lib (from github.com/moalyousef/rtb) be cloned into the same parent directory.
 
