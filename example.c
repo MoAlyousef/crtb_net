@@ -12,7 +12,7 @@ int main() {
   rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot", thread_count);
   if (!server)
     return -1;
-  // route signature: (server, verb, uri, handler, args or context)
+  // route signature: (server, verb, uri, handler, captured args)
   // this allows dynamic request handling
   // try address 127.0.0.1:8000/hello/anyname
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
