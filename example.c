@@ -6,6 +6,7 @@
 void hello_handler(const rtb_request *req, rtb_response *resp, void*);
 
 int main() {
+  /* == nproc, calls std::thread::hardware_concurrency() */
   unsigned int thread_count = rtb_hardware_concurrency();
   /* init signature: (host, port, document_root, thread_count)
      the server would now automatically serve statically from docroot */
