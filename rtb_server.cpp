@@ -75,10 +75,10 @@ void rtb_request_get_placeholders(const rtb_request *req,
     size = sz;
   int i = 0;
   for (auto kv : ph) {
+    if (i == size) break;
     arr[i].key = std::get<std::string>(kv.first).c_str();
     arr[i].value = kv.second.c_str();
     i++;
-    if (i == size) break;
   }
 }
 
