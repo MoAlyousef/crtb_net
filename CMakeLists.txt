@@ -4,11 +4,10 @@ project(crtb_server_example)
 # required for gcc
 find_package(Threads REQUIRED)
 
-add_library(crtb_net SHARED rtb_server.cpp)
+add_library(crtb_net SHARED src/crtb_net.cpp)
 add_executable(server example.c)
 
-# requires that the rtb repo (from github.com/moalyousef/rtb) be cloned into the parent dir
-target_include_directories(crtb_net PUBLIC ${CMAKE_PROJECT_DIRECTORY}../rtb/include)
+target_include_directories(crtb_net PUBLIC ${CMAKE_PROJECT_DIRECTORY}include)
 
 target_compile_options(crtb_net PUBLIC -std=c++17)
 if(WIN32)
