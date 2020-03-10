@@ -5,16 +5,21 @@ extern "C" {
 #endif
 
 typedef void rtb_request;
+
 typedef void rtb_response;
+
 typedef void rtb_server;
+
 typedef struct {
   const char *name;
   const char *value;
 } rtb_header;
+
 typedef struct {
   int key;
   const char *value;
 } rtb_request_regex_placeholder;
+
 typedef struct {
   const char *key;
   const char *value;
