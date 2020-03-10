@@ -4,7 +4,7 @@ C89 wrapper around rtb_net server (multithreaded async using ASIO).
 Build using cmake or modify the build.sh script (if on a posix system):
 
 ```
-git clone --recurse-submodules https://github.com/moalyousef/crtb_net
+git clone https://github.com/moalyousef/crtb_net
 cmake -B bin
 camke --build bin
 ./bin/server
