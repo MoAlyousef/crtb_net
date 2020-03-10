@@ -23,11 +23,12 @@ int main() {
 }
 
 void hello_handler(const rtb_request *req, rtb_response *resp, void* /* args */) {
-  int index = 0;
   int i = 0;
-  const char* name = NULL;
+  int index = 0;
   rtb_request_placeholder placeholders[1] = {0};
+  const char* name = NULL;
   char content[200] = {0};
+
   rtb_request_get_placeholders(req, placeholders, 1);
   for (; i < 1; i++) {
     /* just to show it's queryable by key */
