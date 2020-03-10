@@ -29,7 +29,7 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
 }
 
 int main() {
-  rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot");
+  rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot", 2);
   if (!server) return -1;
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
   rtb_server_run(server);
