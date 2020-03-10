@@ -23,16 +23,17 @@ int main() {
 }
 
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
-  int index;
-  int i;
+  int index = 0;
+  int i = 0;
+  const char* name = NULL;
   rtb_request_placeholder placeholders[1];
   rtb_request_get_placeholders(req, placeholders, 1);
-  for (i = 0; i < 1; i++) {
+  for (; i < 1; i++) {
     // just to show it's queryable by key
     if (strcmp(placeholders[i].key, "name") == 0)
       index = i;
   }
-  const char *name = placeholders[index].value;
+  name = placeholders[index].value;
   char content[200];
   (void)snprintf(content, 200,
            "<html>"
