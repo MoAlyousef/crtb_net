@@ -17,7 +17,7 @@ int main() {
      try address 127.0.0.1:8000/hello/anyname */
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
   rtb_server_run(server);
-  // only called if running failed
+  /* only called if running failed */
   rtb_server_free(server);
   return 0;
 }
