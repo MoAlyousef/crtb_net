@@ -27,16 +27,15 @@ The server example should listen on 127.0.0.1:8000 and should serve the pages in
 
 ```
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
+  char content[200];
   rtb_request_placeholder placeholders[1];
   rtb_request_get_placeholders(req, placeholders, 1);
-  const char *name = placeholders[0].value;
-  char content[200];
   snprintf(content, 200,
            "<html>"
            "<head><title>Hello</title></head>"
            "<body><h1>Hello %s</h1></body>"
            "</html>",
-           name);
+           placeholders[0].value);
   rtb_response_set_content(resp, content);
 }
 

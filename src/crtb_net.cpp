@@ -140,76 +140,109 @@ void rtb_request_free(rtb_request *request) {
 
 char *rtb_request_headers_to_string(const rtb_request *req) {
   auto temp = static_cast<const net::Request *>(req)->get_headers();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
 
 char *rtb_request_method(const rtb_request *req) {
   auto temp = static_cast<const net::Request *>(req)->method;
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
 
 char *rtb_request_uri(const rtb_request *req) {
   auto temp = static_cast<const net::Request *>(req)->uri;
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
 
 void rtb_request_get_headers(const rtb_request *req, rtb_header *headers,
-                             int sz) {
+                             unsigned int sz) {
   auto hdrs = static_cast<const net::Request *>(req)->headers;
   auto size = hdrs.size();
   if (size > sz)
     size = sz;
   for (auto i = 0; i < size; i++) {
-    headers[i].name = hdrs[i].name.c_str();
-    headers[i].value = hdrs[i].value.c_str();
+    headers[i].name = (char *)malloc(hdrs[i].name.size() + 1);
+    strncpy(headers[i].name, hdrs[i].name.c_str(), hdrs[i].name.size() + 1);
+    headers[i].value = (char *)malloc(hdrs[i].value.size() + 1);
+    strncpy(headers[i].value, hdrs[i].value.c_str(), hdrs[i].value.size() + 1);
+  }
+}
+
+void rtb_request_headers_free(rtb_header *headers, unsigned int sz) {
+  for (auto i = 0; i < sz; ++i) {
+    free(headers[i].name);
+    free(headers[i].value);
   }
 }
 
 void rtb_request_get_regex_placeholders(const rtb_request *req,
                                         rtb_request_regex_placeholder *arr,
-                                        int sz) {
+                                        unsigned int sz) {
   auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
   auto size = ph.size();
   if (size > sz)
     size = sz;
+  std::string val;
   for (auto i = 0; i < size; i++) {
     arr[i].key = i;
-    arr[i].value = ph.at(i).c_str();
+    val = ph.at(i);
+    arr[i].value = (char *)malloc(val.size() + 1);
+    strncpy(arr[i].value, val.c_str(), val.size() + 1);
+  }
+}
+
+void rtb_request_regex_placeholders_free(
+    rtb_request_regex_placeholder *placeholders, unsigned int sz) {
+  for (auto i = 0; i < sz; ++i) {
+    free(placeholders[i].value);
   }
 }
 
 void rtb_request_get_placeholders(const rtb_request *req,
-                                  rtb_request_placeholder *arr, int sz) {
+                                  rtb_request_placeholder *arr,
+                                  unsigned int sz) {
   auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
   auto size = ph.size();
   if (size > sz)
     size = sz;
   int i = 0;
+  std::string key, val;
   for (auto kv : ph) {
     if (i == size)
       break;
-    arr[i].key = std::get<std::string>(kv.first).c_str();
-    arr[i].value = kv.second.c_str();
+    key = std::get<std::string>(kv.first);
+    val = kv.second;
+    arr[i].key = (char *)malloc(key.size() + 1);
+    arr[i].value = (char *)malloc(val.size() + 1);
+    strncpy(arr[i].key, key.c_str(), key.size() + 1);
+    strncpy(arr[i].value, val.c_str(), val.size() + 1);
     i++;
+  }
+}
+
+void rtb_request_placeholders_free(rtb_request_placeholder *placeholders,
+                                   unsigned int sz) {
+  for (auto i = 0; i < sz; ++i) {
+    free(placeholders[i].key);
+    free(placeholders[i].value);
   }
 }
 
 char *rtb_request_body(const rtb_request *req) {
   auto temp = static_cast<const net::Request *>(req)->body();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
 
 char *rtb_request_body_decoded(const rtb_request *req) {
   auto temp = static_cast<const net::Request *>(req)->body_decoded();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
@@ -241,7 +274,7 @@ void rtb_response_connection_alive(rtb_response *res, int boolean) {
 
 char *rtb_response_content(rtb_response *res) {
   auto temp = static_cast<net::Response *>(res)->content();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
@@ -254,13 +287,13 @@ int rtb_response_content_length(rtb_response *res) {
   return static_cast<net::Response *>(res)->content_length();
 }
 
-void rtb_response_set_content_length(rtb_response *res) {
-  static_cast<net::Response *>(res)->set_content_length();
+void rtb_response_set_content_length(rtb_response *res, unsigned int length) {
+  static_cast<net::Response *>(res)->set_content_length(length);
 }
 
 char *rtb_response_content_type(rtb_response *res) {
   auto temp = static_cast<net::Response *>(res)->content_type();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
@@ -271,22 +304,22 @@ void rtb_response_set_content_type(rtb_response *res,
 }
 
 char *rtb_response_protocol(rtb_response *res) {
-    auto temp = static_cast<net::Response *>(res)->protocol();
-  char *ret = (char*)malloc(temp.size() + 1);
+  auto temp = static_cast<net::Response *>(res)->protocol();
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
 
 char *rtb_response_location(rtb_response *res) {
   auto temp = static_cast<net::Response *>(res)->location();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }
 
 char *rtb_response_headers_to_string(rtb_response *res) {
   auto temp = static_cast<net::Response *>(res)->get_headers();
-  char *ret = (char*)malloc(temp.size() + 1);
+  char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
 }

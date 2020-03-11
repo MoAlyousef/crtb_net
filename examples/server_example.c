@@ -1,5 +1,6 @@
 #include "crtb_net.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* handler signature: void (*) (const rtb_request*, rtb_response*, void*) */
@@ -27,7 +28,6 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   int i = 0;
   int index = 0;
   rtb_request_placeholder placeholders[1] = {0};
-  const char *name = NULL;
   char content[200] = {0};
 
   rtb_request_get_placeholders(req, placeholders, 1);
@@ -36,16 +36,19 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
     if (strcmp(placeholders[i].key, "name") == 0)
       index = i;
   }
-  name = placeholders[index].value;
+
   (void)sprintf(content,
                 "<html>"
                 "<head><title>Hello</title></head>"
                 "<body><h1>Hello %s</h1></body>"
                 "</html>",
-                name);
+                placeholders[index].value);
 
   /* setting the response status in a handler is optional for OK */
   rtb_response_set_status(resp, 200);
   /* setting content will automatically set content_length */
   rtb_response_set_content(resp, content);
+
+  /* cleanup of placeholder char* members which were allocated in rtb_request_get_placeholders */
+  rtb_request_placeholders_free(placeholders, 1);
 }

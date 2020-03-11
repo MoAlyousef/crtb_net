@@ -20,10 +20,12 @@ int main() {
   rtb_client_follow_redirects(client, FALSE);
   rtb_client_expires_at(client, 30);
 
+  /* runs GET / and returns an rtb_response*, which will need freeing later */
   resp = rtb_client_get(client, "/");
   if (!resp)
     return -1;
 
+  /* returns an allocated char* which needs freeing with a simple free */
   headers = rtb_response_headers_to_string(resp);
   if (!headers)
     return -1;
@@ -36,6 +38,7 @@ int main() {
   printf("%s\n", content);
   free(content);
 
+  /* cleanup */
   rtb_response_free(resp);
   rtb_client_free(client);
 }
