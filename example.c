@@ -24,8 +24,6 @@ int main() {
 }
 
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
-  if (!req) puts("req NULL");
-  if (!resp) puts("resp NULL");
   int i = 0;
   int index = 0;
   rtb_request_placeholder placeholders[1] = {0};
