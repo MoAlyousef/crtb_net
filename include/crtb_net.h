@@ -4,11 +4,17 @@
 extern "C" {
 #endif
 
+/*
+  Definitions
+*/
+
 typedef void rtb_request;
 
 typedef void rtb_response;
 
 typedef void rtb_server;
+
+typedef void rtb_client;
 
 typedef struct {
   const char *name;
@@ -25,11 +31,29 @@ typedef struct {
   const char *value;
 } rtb_request_placeholder;
 
+enum rtb_post_type {
+  Json,
+  Plain,
+  WWWform
+};
+
+/*
+  General
+*/
+
 typedef void (*rtb_request_handler)(const rtb_request *req, rtb_response *resp,
                                     void *args);
 
+unsigned int rtb_hardware_concurrency(void);
+
+/*
+  Server code
+*/
+
 rtb_server *rtb_server_init(const char *host, unsigned int port,
                             const char *docroot, unsigned int threads);
+
+void rtb_server_free(rtb_server *server);                            
 
 void rtb_server_route(rtb_server *, const char *method, const char *path,
                       rtb_request_handler handler, void *args);
@@ -38,13 +62,47 @@ void rtb_server_enable_logging(rtb_server *, int boolean);
 
 void rtb_server_run(rtb_server *server);
 
-void rtb_server_free(rtb_server *server);
+/*
+  Client code
+*/
 
-const char *rtb_request_headers_to_string(const rtb_request *req);
+rtb_client* rtb_client_init();
 
-const char *rtb_request_method(const rtb_request *req);
+void rtb_client_free(rtb_client* client);
 
-const char *rtb_request_uri(const rtb_request *req);
+void rtb_client_set_host(rtb_client* client, const char* addr, unsigned int port);
+
+void rtb_client_set_proxy(rtb_client* client, const char* addr, unsigned int port);
+
+void rtb_client_set_auth(rtb_client* client, const char* user, const char* pass, int is_proxy);
+
+void rtb_client_follow_redirects(rtb_client* client, int boolean);
+
+void rtb_client_expires_at(rtb_client* client, int seconds);
+
+rtb_response *rtb_client_get(rtb_client* client,const char* path);
+
+rtb_response *rtb_client_head(rtb_client* client, const char* path);
+
+rtb_response* rtb_client_post(rtb_client* client, const char* path, enum rtb_post_type type, const char* msg);
+
+rtb_response *rtb_client_put(rtb_client* client,const char* path);
+
+rtb_response *rtb_client_delete(rtb_client* client,const char* path);
+
+/*
+  Request code
+*/
+
+rtb_request* rtb_request_init();
+
+void rtb_request_free(rtb_request* request);
+
+char *rtb_request_headers_to_string(const rtb_request *req);
+
+char *rtb_request_method(const rtb_request *req);
+
+char *rtb_request_uri(const rtb_request *req);
 
 void rtb_request_get_headers(const rtb_request *req, rtb_header *headers, int sz);
 
@@ -54,9 +112,17 @@ void rtb_request_get_regex_placeholders(const rtb_request *req,
 void rtb_request_get_placeholders(const rtb_request *req,
                               rtb_request_placeholder *arr, int sz);
 
-const char *rtb_request_body(const rtb_request *req);
+char *rtb_request_body(const rtb_request *req);
 
-const char *rtb_request_body_decoded(const rtb_request *req);
+char *rtb_request_body_decoded(const rtb_request *req);
+
+/*
+  Response code
+*/
+
+rtb_response* rtb_response_init();
+
+void rtb_response_free(rtb_response *response);
 
 int rtb_response_status(rtb_response *res);
 
@@ -67,7 +133,7 @@ void rtb_response_add_header(rtb_response *res, const char *name,
 
 void rtb_response_connection_alive(rtb_response *res, int boolean);
 
-const char *rtb_response_content(rtb_response *res);
+char *rtb_response_content(rtb_response *res);
 
 void rtb_response_set_content(rtb_response *res, const char *content);
 
@@ -75,17 +141,15 @@ int rtb_response_content_length(rtb_response *res);
 
 void rtb_response_set_content_length(rtb_response *res);
 
-const char *rtb_response_content_type(rtb_response *res);
+char *rtb_response_content_type(rtb_response *res);
 
 void rtb_response_set_content_type(rtb_response *res, const char *content_type);
 
-const char *rtb_response_protocol(rtb_response *res);
+char *rtb_response_protocol(rtb_response *res);
 
-const char *rtb_response_location(rtb_response *res);
+char *rtb_response_location(rtb_response *res);
 
-const char *rtb_response_headers_to_string(rtb_response *res);
-
-unsigned int rtb_hardware_concurrency(void);
+char *rtb_response_headers_to_string(rtb_response *res);
 
 #ifdef __cplusplus
 }
