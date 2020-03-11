@@ -9,7 +9,7 @@ cmake -B bin
 camke --build bin
 ./bin/server
 ```
-or
+or (for older cmake):
 ```
 git clone --recurse-submodules https://github.com/moalyousef/crtb_net
 mkdir bin && cd bin
@@ -18,7 +18,6 @@ make
 cd ..
 ./bin/server
 ```
-The build requires that the rtb lib (from github.com/moalyousef/rtb) be cloned into the same parent directory.
 
 The example server should listen on 127.0.0.1:8000 and should serve the pages in the docroot statically. Also any request to 127.0.0.1:8000/hello/{name} with the name placeholder accepting any string since it has an explicit handler.
 
