@@ -12,7 +12,7 @@ rtb_server *rtb_server_init(const char *host, unsigned int port,
 void rtb_server_route(rtb_server *server, const char *method, const char *path,
                       rtb_request_handler handler, void *args) {
   static_cast<net::HttpServer *>(server)->route(
-      method, path, [&](const net::Request &req2, net::Response &res2) {
+      method, path, [=](const net::Request &req2, net::Response &res2) {
         handler(&req2, &res2, args);
       });
 }

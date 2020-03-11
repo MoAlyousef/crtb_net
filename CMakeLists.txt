@@ -7,8 +7,8 @@ find_package(Threads REQUIRED)
 add_library(crtb_net SHARED src/crtb_net.cpp)
 add_executable(server example.c)
 
-target_include_directories(crtb_net PUBLIC ${CMAKE_PROJECT_DIRECTORY}include)
-target_include_directories(server PUBLIC ${CMAKE_PROJECT_DIRECTORY}include)
+target_include_directories(crtb_net PUBLIC include ext/rtb/include)
+target_include_directories(server PUBLIC include ext/rtb/include)
 
 target_compile_options(crtb_net PUBLIC -std=c++17)
 target_compile_options(server PUBLIC -std=c89)

@@ -1,3 +1,4 @@
 -xc++
--I../rtb/include
+-Iinclude
+-Iext/rtb/include
 -std=c++17
