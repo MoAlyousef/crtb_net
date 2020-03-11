@@ -5,6 +5,7 @@ Build using cmake or modify the build.sh script (if on a posix system):
 
 ```
 git clone --recurse-submodules https://github.com/moalyousef/crtb_net
+cd crtb_net
 cmake -B bin
 camke --build bin
 ./bin/server
@@ -12,6 +13,7 @@ camke --build bin
 or (for older cmake):
 ```
 git clone --recurse-submodules https://github.com/moalyousef/crtb_net
+cd crtb_net
 mkdir bin && cd bin
 cmake ..
 make
