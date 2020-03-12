@@ -16,6 +16,8 @@ typedef void rtb_server;
 
 typedef void rtb_client;
 
+typedef void asio_io_context;
+
 typedef struct {
   char *name;
   char *value;
@@ -161,6 +163,20 @@ char *rtb_response_protocol(rtb_response *res);
 char *rtb_response_location(rtb_response *res);
 
 char *rtb_response_headers_to_string(rtb_response *res);
+
+/*
+  asio wrapper
+*/
+
+typedef void (*rtb_client_continuation)(rtb_client*client, rtb_response* resp, void* args);
+
+asio_io_context* asio_io_context_init(unsigned int thread_num);
+
+void asio_post(asio_io_context* ctx, rtb_client_continuation cb, rtb_client* client, rtb_response* resp, void* args);
+
+void asio_run(asio_io_context* ctx);
+
+void asio_io_context_free(asio_io_context* ctx);
 
 #ifdef __cplusplus
 }

@@ -14,7 +14,7 @@ int main() {
   if (!client)
     return -1;
 
-  rtb_client_set_host(client, "www.example.com", 80);
+  rtb_client_set_host(client, "example.com", 80);
   rtb_client_set_proxy(client, "10.140.195.115", 8080);
   rtb_client_set_auth(client, "user", "pass", TRUE);
   rtb_client_follow_redirects(client, FALSE);

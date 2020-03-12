@@ -19,6 +19,7 @@ rtb_server *rtb_server_init(const char *host, unsigned int port,
 
 void rtb_server_free(rtb_server *server) {
   delete static_cast<net::HttpServer *>(server);
+  server = NULL;
 }
 
 void rtb_server_route(rtb_server *server, const char *method, const char *path,
@@ -47,6 +48,7 @@ rtb_client *rtb_client_init() {
 
 void rtb_client_free(rtb_client *client) {
   delete static_cast<net::HttpClient *>(client);
+  client = NULL;
 }
 
 void rtb_client_set_host(rtb_client *client, const char *addr,
@@ -136,6 +138,7 @@ rtb_request *rtb_request_init() { return new (std::nothrow) net::Request(); }
 
 void rtb_request_free(rtb_request *request) {
   delete static_cast<net::Request *>(request);
+  request = NULL;
 }
 
 char *rtb_request_headers_to_string(const rtb_request *req) {
@@ -253,6 +256,7 @@ rtb_response *rtb_response_init() { return new (std::nothrow) net::Response(); }
 
 void rtb_response_free(rtb_response *response) {
   delete static_cast<net::Response *>(response);
+  response = NULL;
 }
 
 int rtb_response_status(rtb_response *res) {
@@ -322,6 +326,27 @@ char *rtb_response_headers_to_string(rtb_response *res) {
   char *ret = (char *)malloc(temp.size() + 1);
   strncpy(ret, temp.c_str(), temp.size() + 1);
   return ret;
+}
+
+// asio code
+
+asio_io_context* asio_io_context_init(unsigned int thread_num) {
+  return new (std::nothrow) asio::io_context(thread_num);
+}
+
+void asio_io_context_free(asio_io_context* ctx) {
+  delete static_cast<asio::io_context*>(ctx);
+  ctx = NULL;
+}
+
+void asio_post(asio_io_context* ctx, rtb_client_continuation cb, rtb_client* client, rtb_response* resp, void* args) {
+  static_cast<asio::io_context*>(ctx)->post([=]{
+    cb(client, resp, args);
+  });
+}
+
+void asio_run(asio_io_context* ctx) {
+  static_cast<asio::io_context*>(ctx)->run();
 }
 
 #if 0
