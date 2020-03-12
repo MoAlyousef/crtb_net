@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void async_get1(rtb_client *client, rtb_response *resp, void *args) {
-  resp = rtb_client_get(client, "/");
+void async_get1(rtb_response **resp, rtb_client *client, void *args) {
+  *resp = rtb_client_get(client, "/");
 }
 
-void async_get2(rtb_client *client, rtb_response *resp, void *args) {
-  resp = rtb_client_get(client, "/index.html");
+void async_get2(rtb_response **resp, rtb_client *client, void *args) {
+  *resp = rtb_client_get(client, "/index.html");
 }
 
 int main() {
@@ -24,12 +24,12 @@ int main() {
 
   rtb_client_set_host(client, "www.example.com", 80);
 
-  asio_post(io_context, &async_get1, client, resp1, NULL);
+  asio_post(io_context, &async_get1, &resp1, client, NULL);
 
-  asio_post(io_context, &async_get2, client, resp2, NULL);
+  asio_post(io_context, &async_get2, &resp2, client, NULL);
 
   asio_run(io_context);
-
+  
   if (!resp1 || !resp2) return -1;
 
   content1 = rtb_response_content(resp1);

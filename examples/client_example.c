@@ -15,9 +15,11 @@ int main() {
     return -1;
 
   rtb_client_set_host(client, "example.com", 80);
+  /* 
   rtb_client_set_proxy(client, "10.140.195.115", 8080);
   rtb_client_set_auth(client, "user", "pass", TRUE);
-  rtb_client_follow_redirects(client, FALSE);
+  rtb_client_follow_redirects(client, FALSE); 
+  */
   rtb_client_expires_at(client, 30);
 
   /* runs GET / and returns an rtb_response*, which will need freeing later */

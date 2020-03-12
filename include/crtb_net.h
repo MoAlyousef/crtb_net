@@ -109,14 +109,14 @@ char *rtb_request_uri(const rtb_request *req);
 void rtb_request_get_headers(const rtb_request *req, rtb_header *headers,
                              unsigned int sz);
 
-void rtb_request_headers_free(rtb_header *headers, unsigned int sz);                             
+void rtb_request_headers_free(rtb_header *headers, unsigned int sz);
 
 void rtb_request_get_regex_placeholders(const rtb_request *req,
                                         rtb_request_regex_placeholder *arr,
                                         unsigned int sz);
 
 void rtb_request_regex_placeholders_free(
-    rtb_request_regex_placeholder *placeholders, unsigned int sz);                                        
+    rtb_request_regex_placeholder *placeholders, unsigned int sz);
 
 void rtb_request_get_placeholders(const rtb_request *req,
                                   rtb_request_placeholder *arr,
@@ -168,15 +168,17 @@ char *rtb_response_headers_to_string(rtb_response *res);
   asio wrapper
 */
 
-typedef void (*rtb_client_continuation)(rtb_client*client, rtb_response* resp, void* args);
+typedef void (*rtb_client_continuation)(rtb_response **resp, rtb_client *client,
+                                        void *args);
 
-asio_io_context* asio_io_context_init(unsigned int thread_num);
+asio_io_context *asio_io_context_init(unsigned int thread_num);
 
-void asio_post(asio_io_context* ctx, rtb_client_continuation cb, rtb_client* client, rtb_response* resp, void* args);
+void asio_post(asio_io_context *ctx, rtb_client_continuation cb,
+               rtb_response **resp, rtb_client *client, void *args);
 
-void asio_run(asio_io_context* ctx);
+void asio_run(asio_io_context *ctx);
 
-void asio_io_context_free(asio_io_context* ctx);
+void asio_io_context_free(asio_io_context *ctx);
 
 #ifdef __cplusplus
 }

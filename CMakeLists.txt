@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(crtb_net_examples)
 
+set(CMAKE_CXX_FLAGS -std=c++17)
+set(CMAKE_C_FLAGS -std=c89)
+
 # required for gcc
 find_package(Threads REQUIRED)
 
@@ -13,11 +16,6 @@ target_include_directories(crtb_net PUBLIC include ext/rtb/include)
 target_include_directories(server PUBLIC include)
 target_include_directories(client PUBLIC include)
 target_include_directories(async_client PUBLIC include)
-
-target_compile_options(crtb_net PUBLIC -std=c++17)
-target_compile_options(server PUBLIC -std=c89)
-target_compile_options(client PUBLIC -std=c89)
-target_compile_options(async_client PUBLIC -std=c89)
 
 if(WIN32)
 target_compile_definitions(crtb_net PUBLIC WIN32_LEAN_AND_MEAN)

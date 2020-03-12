@@ -339,9 +339,9 @@ void asio_io_context_free(asio_io_context* ctx) {
   ctx = NULL;
 }
 
-void asio_post(asio_io_context* ctx, rtb_client_continuation cb, rtb_client* client, rtb_response* resp, void* args) {
+void asio_post(asio_io_context* ctx, rtb_client_continuation cb, rtb_response** resp, rtb_client* client, void* args) {
   static_cast<asio::io_context*>(ctx)->post([=]{
-    cb(client, resp, args);
+    cb(resp, client, args);
   });
 }
 
