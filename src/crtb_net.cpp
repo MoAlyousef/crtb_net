@@ -416,7 +416,7 @@ rtb_response *rtb_ssl_client_post(rtb_ssl_client *client, const char *path,
             ->Post(path, static_cast<net::PostContentType>(type), msg)
             .unwrap());
     return temp;
-  } catch (...) {
+  } catch (...) { 
     return NULL;
   }
 }
