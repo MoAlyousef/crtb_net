@@ -351,9 +351,10 @@ void asio_run(asio_io_context *ctx) {
 #ifdef rtb_ENABLE_SSL
 
 rtb_ssl_client *rtb_ssl_client_init(SSL_CTX *ctx) {
-  asio::ssl::context temp(asio::ssl::context::method::tlsv1);
-  SSL_CTX_clear_options(temp.native_handle(), SSL_OP_NO_SSLv2);
-  SSL_CTX_set_options(temp.native_handle(), SSL_CTX_get_options(ctx));
+  // asio::ssl::context temp(asio::ssl::context::method::tlsv1);
+  // SSL_CTX_clear_options(temp.native_handle(), SSL_OP_NO_SSLv2);
+  // SSL_CTX_set_options(temp.native_handle(), SSL_CTX_get_options(ctx));
+  asio::ssl::context temp(ctx);
   return new (std::nothrow) net::HttpsClient(net::HttpsClient::init(temp));
 }
 
