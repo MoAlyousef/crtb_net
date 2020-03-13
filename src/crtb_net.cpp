@@ -330,24 +330,120 @@ char *rtb_response_headers_to_string(rtb_response *res) {
 
 // asio code
 
-asio_io_context* asio_io_context_init(unsigned int thread_num) {
+asio_io_context *asio_io_context_init(unsigned int thread_num) {
   return new (std::nothrow) asio::io_context(thread_num);
 }
 
-void asio_io_context_free(asio_io_context* ctx) {
-  delete static_cast<asio::io_context*>(ctx);
+void asio_io_context_free(asio_io_context *ctx) {
+  delete static_cast<asio::io_context *>(ctx);
   ctx = NULL;
 }
 
-void asio_post(asio_io_context* ctx, rtb_client_continuation cb, rtb_response** resp, rtb_client* client, void* args) {
-  static_cast<asio::io_context*>(ctx)->post([=]{
-    cb(resp, client, args);
-  });
+void asio_post(asio_io_context *ctx, rtb_client_continuation cb,
+               rtb_response **resp, rtb_client *client, void *args) {
+  static_cast<asio::io_context *>(ctx)->post([=] { cb(resp, client, args); });
 }
 
-void asio_run(asio_io_context* ctx) {
-  static_cast<asio::io_context*>(ctx)->run();
+void asio_run(asio_io_context *ctx) {
+  static_cast<asio::io_context *>(ctx)->run();
 }
+
+#ifdef rtb_ENABLE_SSL
+
+rtb_ssl_client *rtb_ssl_client_init(SSL_CTX *ctx) {
+  asio::ssl::context temp(asio::ssl::context::method::tlsv1);
+  SSL_CTX_clear_options(temp.native_handle(), SSL_OP_NO_SSLv2);
+  SSL_CTX_set_options(temp.native_handle(), SSL_CTX_get_options(ctx));
+  return new (std::nothrow) net::HttpsClient(net::HttpsClient::init(temp));
+}
+
+void rtb_ssl_client_free(rtb_ssl_client *client) {
+  delete static_cast<net::HttpsClient *>(client);
+  client = NULL;
+}
+
+void rtb_ssl_client_set_host(rtb_ssl_client *client, const char *addr,
+                             unsigned int port) {
+  static_cast<net::HttpsClient *>(client)->set_host(addr, port);
+}
+
+void rtb_ssl_client_set_proxy(rtb_ssl_client *client, const char *addr,
+                              unsigned int port) {
+  static_cast<net::HttpsClient *>(client)->set_proxy_host(addr, port);
+}
+
+void rtb_ssl_client_set_auth(rtb_ssl_client *client, const char *user,
+                             const char *pass, int is_proxy) {
+  static_cast<net::HttpsClient *>(client)->set_auth(user, pass, is_proxy);
+}
+
+void rtb_ssl_client_follow_redirects(rtb_ssl_client *client, int boolean) {
+  static_cast<net::HttpsClient *>(client)->follow_redirects(boolean);
+}
+
+void rtb_ssl_client_expires_at(rtb_ssl_client *client, int seconds) {
+  static_cast<net::HttpsClient *>(client)->expires_at(seconds);
+}
+
+rtb_response *rtb_ssl_client_get(rtb_ssl_client *client, const char *path) {
+  net::Response *temp;
+  try {
+    temp = new (std::nothrow) net::Response(
+        static_cast<net::HttpsClient *>(client)->Get(path).unwrap());
+    return temp;
+  } catch (...) {
+    return NULL;
+  }
+}
+
+rtb_response *rtb_ssl_client_head(rtb_ssl_client *client, const char *path) {
+  net::Response *temp;
+  try {
+    temp = new (std::nothrow) net::Response(
+        static_cast<net::HttpsClient *>(client)->Head(path).unwrap());
+    return temp;
+  } catch (...) {
+    return NULL;
+  }
+}
+
+rtb_response *rtb_ssl_client_post(rtb_ssl_client *client, const char *path,
+                                  enum rtb_post_type type, const char *msg) {
+  net::Response *temp;
+  try {
+    temp = new (std::nothrow) net::Response(
+        static_cast<net::HttpsClient *>(client)
+            ->Post(path, static_cast<net::PostContentType>(type), msg)
+            .unwrap());
+    return temp;
+  } catch (...) {
+    return NULL;
+  }
+}
+
+rtb_response *rtb_ssl_client_put(rtb_ssl_client *client, const char *path) {
+  net::Response *temp;
+  try {
+    temp = new (std::nothrow) net::Response(
+        static_cast<net::HttpsClient *>(client)->Put(path).unwrap());
+    return temp;
+  } catch (...) {
+    return NULL;
+  }
+}
+
+rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path) {
+  net::Response *temp;
+  try {
+    temp = new (std::nothrow) net::Response(
+        static_cast<net::HttpsClient *>(client)->Delete(path).unwrap());
+    return temp;
+  } catch (...) {
+    return NULL;
+  }
+}
+
+#endif
 
 #if 0
 

@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef rtb_ENABLE_SSL
+#include <openssl/ssl.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,6 +19,8 @@ typedef void rtb_response;
 typedef void rtb_server;
 
 typedef void rtb_client;
+
+typedef void rtb_ssl_client;
 
 typedef void asio_io_context;
 
@@ -179,6 +185,42 @@ void asio_post(asio_io_context *ctx, rtb_client_continuation cb,
 void asio_run(asio_io_context *ctx);
 
 void asio_io_context_free(asio_io_context *ctx);
+
+/*
+  ssl client
+*/
+
+#ifdef rtb_ENABLE_SSL
+
+rtb_ssl_client *rtb_ssl_client_init(SSL_CTX* ctx);
+
+void rtb_ssl_client_free(rtb_ssl_client *client);
+
+void rtb_ssl_client_set_host(rtb_ssl_client *client, const char *addr,
+                         unsigned int port);
+
+void rtb_ssl_client_set_proxy(rtb_ssl_client *client, const char *addr,
+                          unsigned int port);
+
+void rtb_ssl_client_set_auth(rtb_ssl_client *client, const char *user, const char *pass,
+                         int is_proxy);
+
+void rtb_ssl_client_follow_redirects(rtb_ssl_client *client, int boolean);
+
+void rtb_ssl_client_expires_at(rtb_ssl_client *client, int seconds);
+
+rtb_response *rtb_ssl_client_get(rtb_ssl_client *client, const char *path);
+
+rtb_response *rtb_ssl_client_head(rtb_ssl_client *client, const char *path);
+
+rtb_response *rtb_ssl_client_post(rtb_ssl_client *client, const char *path,
+                              enum rtb_post_type type, const char *msg);
+
+rtb_response *rtb_ssl_client_put(rtb_ssl_client *client, const char *path);
+
+rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path);
+
+#endif
 
 #ifdef __cplusplus
 }
