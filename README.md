@@ -45,6 +45,14 @@ int main() {
   rtb_server_run(server);
 }
 ```
+A minimal static server:
+```
+int main() {
+  rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot", 2);
+  rtb_server_run(server);
+}
+```
+
 
 The client example should get and print the index page of www.example.com, the client supports proxy and authentication.
 ```
