@@ -20,8 +20,10 @@ int main() {
      127.0.0.1:8000/hello/anyname */
   rtb_server_route(server, "GET", "/hello/{name}", &hello_handler, NULL);
   rtb_server_run(server);
-  /* only called if running failed */
-  rtb_server_free(server);
+  if (!server) {
+    puts("Failed to run server!");
+    rtb_server_free(server);
+  }
 }
 
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
