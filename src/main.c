@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Creates a server which serves static pages from a local directory */
 int main(int argc, char **argv) {
     long port = 0;
     rtb_server *server = NULL;
