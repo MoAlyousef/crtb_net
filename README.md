@@ -1,5 +1,5 @@
 # crtb_net
-C89 wrapper around rtb_net server (multithreaded async using ASIO).
+C89 wrapper around rtb_net client and server (multithreaded async using ASIO).
 
 Build using cmake or modify the build.sh script (if on a posix system):
 
