@@ -22,5 +22,6 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Failed to initialize server");
         exit(EXIT_FAILURE);
     }
+
     return rtb_server_run(server);
 }
