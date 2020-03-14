@@ -12,7 +12,7 @@ int main() {
   /* init signature: (host, port, document_root, thread_count)
      the server would now automatically serve statically from docroot */
   rtb_server *server =
-      rtb_server_init("localhost", 8000, "wwwroot", thread_count);
+      rtb_server_init("localhost", 8000, "examples/wwwroot", thread_count);
   if (!server)
     return -1;
   /* route signature: (server, verb, uri with optional placeholders, handler,
