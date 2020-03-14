@@ -1,4 +1,3 @@
-#define rtb_ENABLE_SSL
 #include "crtb_net.h"
 #include <openssl/ssl.h>
 #include <stdio.h>
