@@ -13,7 +13,6 @@ if(RTB_ENABLE_SSL)
     find_package(OpenSSL REQUIRED)
 endif()
 
-
 add_library(crtb_net SHARED src/crtb_net.cpp)
 add_executable(server examples/server.c)
 add_executable(client examples/client.c)
@@ -31,7 +30,6 @@ target_include_directories(async_client PUBLIC include)
 if(RTB_ENABLE_SSL)
     target_include_directories(ssl_client PUBLIC include)
 endif()
-
 
 if(WIN32)
 target_compile_definitions(crtb_net PUBLIC WIN32_LEAN_AND_MEAN)
