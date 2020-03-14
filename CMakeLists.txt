@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(crtb_net_examples)
 
-if(${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(CMAKE_CXX_FLAGS /std:c++17)
 else()
     set(CMAKE_CXX_FLAGS -std=c++17)
@@ -20,7 +20,7 @@ endif()
 
 include_directories(include .ext/rtb/include)
 
-add_library(crtb_net SHARED libsrc/crtb_net.cpp)
+add_library(crtb_net STATIC libsrc/crtb_net.cpp)
 
 if(RTB_ENABLE_SSL)
     target_compile_definitions(crtb_net PUBLIC rtb_ENABLE_SSL)

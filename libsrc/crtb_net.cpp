@@ -39,7 +39,7 @@ unsigned int rtb_hardware_concurrency(void) {
 rtb_server *rtb_server_init(const char *host, unsigned int port,
                             const char *docroot, unsigned int threads) {
   return new (std::nothrow)
-      net::HttpServer(net::HttpServer::init(host, port, docroot, threads));
+      net::HttpServer(host, port, docroot, threads);
 }
 
 void rtb_server_free(rtb_server *server) {
@@ -70,7 +70,7 @@ int rtb_server_run(rtb_server *server) {
 // client code
 
 rtb_client *rtb_client_init() {
-  return new (std::nothrow) net::HttpClient(net::HttpClient::init());
+  return new (std::nothrow) net::HttpClient();
 }
 
 void rtb_client_free(rtb_client *client) {

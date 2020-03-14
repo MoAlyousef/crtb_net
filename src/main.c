@@ -8,19 +8,19 @@ int main(int argc, char **argv) {
     rtb_server *server = NULL;
 
     if(argc < 3) {
-        fprintf(stderr, "Usage: ./main host port");
+        fprintf(stderr, "Usage: ./main host port\n");
         exit(EXIT_FAILURE);
     }
 
     port = atol(argv[2]);
     if(!port) {
-        fprintf(stderr, "Please enter a valid port");
+        fprintf(stderr, "Please enter a valid port\n");
         exit(EXIT_FAILURE);
     }
 
     server = rtb_server_init(argv[1], port, ".", 2);
     if(!server) {
-        fprintf(stderr, "Failed to initialize server");
+        fprintf(stderr, "Failed to initialize server\n");
         exit(EXIT_FAILURE);
     }
 
