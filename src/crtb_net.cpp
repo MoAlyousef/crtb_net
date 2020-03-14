@@ -34,10 +34,12 @@ void rtb_server_enable_logging(rtb_server *server, int boolean) {
   static_cast<net::HttpServer *>(server)->enable_logging(boolean);
 }
 
-void rtb_server_run(rtb_server *server) {
-  auto retval = static_cast<net::HttpServer *>(server)->run();
-  if (retval.is_err())
-    server = NULL;
+int rtb_server_run(rtb_server *server) {
+  try {
+    return static_cast<net::HttpServer *>(server)->run().unwrap();
+  } catch(...) {
+    return -1;
+  }
 }
 
 // client code

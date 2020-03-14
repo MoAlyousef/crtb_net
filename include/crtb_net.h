@@ -64,7 +64,7 @@ void rtb_server_route(rtb_server *, const char *method, const char *path,
 
 void rtb_server_enable_logging(rtb_server *, int boolean);
 
-void rtb_server_run(rtb_server *server);
+int rtb_server_run(rtb_server *server);
 
 /*
   Client code
