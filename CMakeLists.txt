@@ -11,7 +11,6 @@ endif()
 option(RTB_ENABLE_SSL "Finds and links OpenSSL" OFF)
 option(RTB_BUILD_EXAMPLES "Builds examples" OFF)
 
-# required for gcc
 find_package(Threads REQUIRED)
 
 if(RTB_ENABLE_SSL)
