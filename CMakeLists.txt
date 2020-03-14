@@ -4,6 +4,8 @@ project(crtb_net_examples)
 set(CMAKE_CXX_FLAGS -std=c++17)
 set(CMAKE_C_FLAGS -std=c89)
 
+option(RTB_ENABLE_SSL "Finds and links OpenSSL" OFF)
+
 # required for gcc
 find_package(Threads REQUIRED)
 
