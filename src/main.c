@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
     rtb_server *server = NULL;
 
     if(argc < 3) {
-        fprintf(stderr, "Usage: ./"main host port");
+        fprintf(stderr, "Usage: ./main host port");
         exit(EXIT_FAILURE);
     }
 
