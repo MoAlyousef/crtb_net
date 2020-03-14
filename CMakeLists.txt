@@ -17,7 +17,7 @@ if(RTB_ENABLE_SSL)
     find_package(OpenSSL REQUIRED)
 endif()
 
-add_library(crtb_net SHARED src/crtb_net.cpp)
+add_library(crtb_net SHARED libsrc/crtb_net.cpp)
 add_executable(server examples/server.c)
 add_executable(client examples/client.c)
 add_executable(async_client examples/async_client.c)
