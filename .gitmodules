@@ -1,4 +1,4 @@
-[submodule "ext/rtb"]
-	path = ext/rtb
+[submodule ".ext/rtb"]
+	path = .ext/rtb
 	url = https://github.com/moalyousef/rtb
 	branch = master
