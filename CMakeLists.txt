@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
 project(crtb_net_examples)
 
+if(${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
+set(CMAKE_CXX_FLAGS /std:c++17)
+else()
 set(CMAKE_CXX_FLAGS -std=c++17)
 set(CMAKE_C_FLAGS -std=c89)
+endif()
 
 option(RTB_ENABLE_SSL "Finds and links OpenSSL" OFF)
 
