@@ -1,4 +1,0 @@
--xc++
--Iinclude
--Iext/rtb/include
--std=c++17
