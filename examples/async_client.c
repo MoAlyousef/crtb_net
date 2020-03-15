@@ -10,7 +10,7 @@ void async_get2(rtb_response **resp, rtb_client *client, void *args) {
   *resp = rtb_client_get(client, "/index.html");
 }
 
-int main() {
+int main(void) {
   rtb_response *resp1 = NULL;
   rtb_response *resp2 = NULL;
   rtb_content content1;
