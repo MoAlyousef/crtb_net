@@ -5,7 +5,7 @@
 #define TRUE 1
 #define FALSE 0
 
-int main() {
+int main(void) {
   rtb_response *resp = NULL;
   char *headers = NULL;
   rtb_content content;
