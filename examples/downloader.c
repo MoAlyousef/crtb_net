@@ -1,7 +1,6 @@
 #include "crtb_net.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 /*
 ** Example: ./downloader http://i.4cdn.org /v/1584293569989.jpg image.jpg
