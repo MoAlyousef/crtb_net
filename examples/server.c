@@ -46,7 +46,6 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   rtb_response_set_status(resp, 200);
   /* setting content will automatically set content_length */
   rtb_response_set_content(resp, content);
-
   /* cleanup of placeholder char* members which were allocated in rtb_request_get_placeholders */
   rtb_request_placeholders_free(placeholders, 1);
 }
