@@ -8,7 +8,7 @@
 int main(void) {
   rtb_response *resp = NULL;
   char *headers = NULL;
-  rtb_content content;
+  rtb_content content = {NULL, 0};
 
   rtb_client *client = rtb_client_init();
   if (!client)
