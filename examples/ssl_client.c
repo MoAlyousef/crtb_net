@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
+int main(void) {
   rtb_response *resp = NULL;
   rtb_content content;
   SSL_CTX *ctx;
