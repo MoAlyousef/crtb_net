@@ -4,7 +4,7 @@
 #include <string.h>
 
 /*
-** Example: ./downloader i.4cdn.org /v/1584293569989.jpg image.jpg
+** Example: ./downloader http://i.4cdn.org /v/1584293569989.jpg image.jpg
 */
 
 int main(int argc, char **argv) {
