@@ -39,12 +39,15 @@ int main(int argc, char **argv) {
 
   /* Binary write */
   retval = fwrite(content.value, 1, content.size, out);
-
+  
   /* cleanup */
   fclose(out);
   free(content.value);
   rtb_response_free(resp);
   rtb_client_free(client);
 
-  return retval;
+  if(retval != content.size)
+    return -1;
+
+  return 0;
 }
