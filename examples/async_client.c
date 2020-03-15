@@ -13,8 +13,8 @@ void async_get2(rtb_response **resp, rtb_client *client, void *args) {
 int main() {
   rtb_response *resp1 = NULL;
   rtb_response *resp2 = NULL;
-  char *content1 = NULL;
-  char *content2 = NULL;
+  rtb_content content1;
+  rtb_content content2;
 
   asio_io_context *io_context = asio_io_context_init(4);
 
@@ -33,18 +33,14 @@ int main() {
   if (!resp1 || !resp2) return -1;
 
   content1 = rtb_response_content(resp1);
-  if (!content1)
-    return -1;
-  printf("%s\n", content1);
-  free(content1);
+  printf("%s\n", content1.value);
+  free(content1.value);
 
   content2 = rtb_response_content(resp2);
-  if (!content2)
-    return -1;
-  printf("%s\n", content2);
-  free(content2);
+  printf("%s\n", content2.value);
 
   /* cleanup */
+  free(content2.value);
   rtb_response_free(resp1);
   rtb_response_free(resp2);
   rtb_client_free(client);

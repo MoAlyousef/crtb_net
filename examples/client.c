@@ -8,7 +8,7 @@
 int main() {
   rtb_response *resp = NULL;
   char *headers = NULL;
-  char *content = NULL;
+  rtb_content content;
 
   rtb_client *client = rtb_client_init();
   if (!client)
@@ -35,12 +35,10 @@ int main() {
   free(headers);
 
   content = rtb_response_content(resp);
-  if (!content)
-    return -1;
-  printf("%s\n", content);
-  free(content);
+  printf("%s\n", content.value);
 
   /* cleanup */
+  free(content.value);
   rtb_response_free(resp);
   rtb_client_free(client);
 }

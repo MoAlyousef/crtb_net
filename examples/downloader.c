@@ -9,14 +9,14 @@
 
 int main(int argc, char **argv) {
   FILE* out = NULL;
-  int retval = 0;
+  unsigned int retval = 0;
   if (argc != 4) {
     fprintf(stderr, "Usage: ./downloader address url output_file\n");
     return -1;
   }
 
   rtb_response *resp = NULL;
-  char *content = NULL;
+  rtb_content content;
 
   rtb_client *client = rtb_client_init();
   if (!client)
@@ -29,8 +29,6 @@ int main(int argc, char **argv) {
     return -1;
 
   content = rtb_response_content(resp);
-  if (!content)
-    return -1;
 
   out = fopen(argv[3], "wb");
   if(!out) {
@@ -38,11 +36,12 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  retval = fputs(content, out);
+  /* Binary write */
+  retval = fwrite(content.value, 1, content.size, out);
 
   /* cleanup */
   fclose(out);
-  free(content);
+  free(content.value);
   rtb_response_free(resp);
   rtb_client_free(client);
 

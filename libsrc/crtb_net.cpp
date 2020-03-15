@@ -307,11 +307,15 @@ void rtb_response_connection_alive(rtb_response *res, int boolean) {
   static_cast<net::Response *>(res)->connection_alive(boolean);
 }
 
-char *rtb_response_content(rtb_response *res) {
+rtb_content rtb_response_content(rtb_response *res) {
   auto temp = static_cast<net::Response *>(res)->content();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  rtb_content content;
+  unsigned int sz = temp.size();
+  content.value = (char *)malloc(sz + 1);
+  content.size = sz;
+  std::memcpy(content.value, &temp[0], sz);
+  content.value[sz] = '\0';
+  return content;
 }
 
 void rtb_response_set_content(rtb_response *res, const char *content) {

@@ -5,7 +5,7 @@
 
 int main() {
   rtb_response *resp = NULL;
-  char *content = NULL;
+  rtb_content content;
   SSL_CTX *ctx;
 
   ctx = SSL_CTX_new(TLSv1_2_client_method());
@@ -29,12 +29,10 @@ int main() {
     return -1;
 
   content = rtb_response_content(resp);
-  if (!content)
-    return -1;
-  printf("%s\n", content);
-  free(content);
+  printf("%s\n", content.value);
 
   /* cleanup */
+  free(content.value);
   rtb_response_free(resp);
   rtb_ssl_client_free(client);
 }
