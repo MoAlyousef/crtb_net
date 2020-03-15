@@ -34,12 +34,13 @@ int main() {
 
   content1 = rtb_response_content(resp1);
   printf("%s\n", content1.value);
-  free(content1.value);
 
   content2 = rtb_response_content(resp2);
   printf("%s\n", content2.value);
 
   /* cleanup */
+
+  free(content1.value);
   free(content2.value);
   rtb_response_free(resp1);
   rtb_response_free(resp2);
