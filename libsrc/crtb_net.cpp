@@ -59,6 +59,10 @@ void rtb_server_enable_logging(rtb_server *server, int boolean) {
   static_cast<net::HttpServer *>(server)->enable_logging(boolean);
 }
 
+void rtb_server_enable_dir_listing(rtb_server *server, int boolean) {
+  static_cast<net::HttpServer *>(server)->enable_dir_listing(boolean);
+}
+
 int rtb_server_run(rtb_server *server) {
   try {
     return static_cast<net::HttpServer *>(server)->run().unwrap();
