@@ -13,8 +13,8 @@ void async_get2(rtb_response **resp, rtb_client *client, void *args) {
 int main(void) {
   rtb_response *resp1 = NULL;
   rtb_response *resp2 = NULL;
-  rtb_content content1;
-  rtb_content content2;
+  rtb_content content1 = {NULL, 0};
+  rtb_content content2 = {NULL, 0};
 
   asio_io_context *io_context = asio_io_context_init(4);
 
