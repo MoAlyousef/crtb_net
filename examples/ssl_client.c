@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 int main(void) {
+  SSL_CTX *ctx = NULL;
   rtb_response *resp = NULL;
-  rtb_content content;
-  SSL_CTX *ctx;
+  rtb_content content = {NULL, 0};
 
   ctx = SSL_CTX_new(TLSv1_2_client_method());
   if (!ctx)
