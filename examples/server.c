@@ -6,7 +6,7 @@
 /* handler signature: void (*) (const rtb_request*, rtb_response*, void*) */
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args);
 
-int main() {
+int main(void) {
   /* == nproc, calls std::thread::hardware_concurrency() */
   unsigned int thread_count = rtb_hardware_concurrency();
   /* init signature: (host, port, document_root, thread_count)
