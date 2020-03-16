@@ -17,7 +17,9 @@ int main(void) {
   rtb_content content2 = {0};
 
   asio_io_context *io_context = asio_io_context_init(4);
-
+  if (!io_context)
+    return -1;
+ 
   rtb_client *client = rtb_client_init();
   if (!client)
     return -1;
