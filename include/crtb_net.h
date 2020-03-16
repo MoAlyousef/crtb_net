@@ -103,7 +103,7 @@ int rtb_server_run(rtb_server *server);
   Client code
 */
 
-rtb_client *rtb_client_init();
+rtb_client *rtb_client_init(void);
 
 void rtb_client_free(rtb_client *client);
 
