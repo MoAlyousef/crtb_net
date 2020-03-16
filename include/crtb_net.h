@@ -135,7 +135,7 @@ rtb_response *rtb_client_delete(rtb_client *client, const char *path);
   Request code
 */
 
-rtb_request *rtb_request_init();
+rtb_request *rtb_request_init(void);
 
 void rtb_request_free(rtb_request *request);
 
@@ -172,7 +172,7 @@ char *rtb_request_body_decoded(const rtb_request *req);
   Response code
 */
 
-rtb_response *rtb_response_init();
+rtb_response *rtb_response_init(void);
 
 void rtb_response_free(rtb_response *response);
 
