@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   FILE* out = NULL;
   unsigned int retval = 0;
   rtb_response *resp = NULL;
-  rtb_content content = {NULL, 0};
+  rtb_content content = {0};
   
   if (argc != 4) {
     fprintf(stderr, "Usage: ./downloader address url output_file\n");
