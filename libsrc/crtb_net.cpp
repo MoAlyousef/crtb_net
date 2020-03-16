@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 #include "crtb_net.h"
 #include "rtb_net.hpp"
 #include <cstring>
@@ -38,8 +37,7 @@ unsigned int rtb_hardware_concurrency(void) {
 
 rtb_server *rtb_server_init(const char *host, unsigned int port,
                             const char *docroot, unsigned int threads) {
-  return new (std::nothrow)
-      net::HttpServer(host, port, docroot, threads);
+  return new (std::nothrow) net::HttpServer(host, port, docroot, threads);
 }
 
 void rtb_server_free(rtb_server *server) {
@@ -66,16 +64,14 @@ void rtb_server_enable_dir_listing(rtb_server *server, int boolean) {
 int rtb_server_run(rtb_server *server) {
   try {
     return static_cast<net::HttpServer *>(server)->run().unwrap();
-  } catch(...) {
+  } catch (...) {
     return -1;
   }
 }
 
 // client code
 
-rtb_client *rtb_client_init() {
-  return new (std::nothrow) net::HttpClient();
-}
+rtb_client *rtb_client_init() { return new (std::nothrow) net::HttpClient(); }
 
 void rtb_client_free(rtb_client *client) {
   delete static_cast<net::HttpClient *>(client);
@@ -385,6 +381,44 @@ void asio_run(asio_io_context *ctx) {
 
 #ifdef rtb_ENABLE_SSL
 
+rtb_ssl_server *rtb_ssl_server_init(SSL_CTX *ctx, const char *host,
+                                    unsigned int port, const char *docroot,
+                                    unsigned int threads) {
+  asio::ssl::context temp(ctx);
+  return new (std::nothrow)
+      net::HttpsServer(temp, host, port, docroot, threads);
+}
+
+void rtb_ssl_server_free(rtb_ssl_server *server) {
+  delete static_cast<net::HttpsServer *>(server);
+  server = NULL;
+}
+
+void rtb_ssl_server_route(rtb_ssl_server *server, const char *method,
+                          const char *path, rtb_request_handler handler,
+                          void *args) {
+  static_cast<net::HttpsServer *>(server)->route(
+      method, path, [=](const net::Request &req2, net::Response &res2) {
+        handler(&req2, &res2, args);
+      });
+}
+
+void rtb_ssl_server_enable_logging(rtb_ssl_server *server, int boolean) {
+  static_cast<net::HttpsServer *>(server)->enable_logging(boolean);
+}
+
+void rtb_ssl_server_enable_dir_listing(rtb_ssl_server *server, int boolean) {
+  static_cast<net::HttpsServer *>(server)->enable_dir_listing(boolean);
+}
+
+int rtb_ssl_server_run(rtb_ssl_server *server) {
+  try {
+    return static_cast<net::HttpsServer *>(server)->run().unwrap();
+  } catch (...) {
+    return -1;
+  }
+}
+
 rtb_ssl_client *rtb_ssl_client_init(SSL_CTX *ctx) {
   asio::ssl::context temp(ctx);
   return new (std::nothrow) net::HttpsClient(net::HttpsClient::init(temp));
@@ -449,7 +483,7 @@ rtb_response *rtb_ssl_client_post(rtb_ssl_client *client, const char *path,
             ->Post(path, static_cast<net::PostContentType>(type), msg)
             .unwrap());
     return temp;
-  } catch (...) { 
+  } catch (...) {
     return NULL;
   }
 }
@@ -475,9 +509,5 @@ rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path) {
     return NULL;
   }
 }
-
-#endif
-
-#if 0
 
 #endif

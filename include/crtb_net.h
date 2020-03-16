@@ -45,6 +45,8 @@ typedef void rtb_server;
 
 typedef void rtb_client;
 
+typedef void rtb_ssl_server;
+
 typedef void rtb_ssl_client;
 
 typedef void asio_io_context;
@@ -219,11 +221,29 @@ void asio_run(asio_io_context *ctx);
 
 void asio_io_context_free(asio_io_context *ctx);
 
+#ifdef rtb_ENABLE_SSL
+
+/*
+  ssl server
+*/
+
+rtb_ssl_server *rtb_ssl_server_init(SSL_CTX* ctx, const char *host, unsigned int port,
+                            const char *docroot, unsigned int threads);
+
+void rtb_ssl_server_free(rtb_ssl_server *server);
+
+void rtb_ssl_server_route(rtb_ssl_server *, const char *method, const char *path,
+                      rtb_request_handler handler, void *args);
+
+void rtb_ssl_server_enable_logging(rtb_ssl_server *, int boolean);
+
+void rtb_ssl_server_enable_dir_listing(rtb_ssl_server *, int boolean);
+
+int rtb_ssl_server_run(rtb_ssl_server *server);
+
 /*
   ssl client
 */
-
-#ifdef rtb_ENABLE_SSL
 
 rtb_ssl_client *rtb_ssl_client_init(SSL_CTX* ctx);
 
