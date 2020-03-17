@@ -4,23 +4,20 @@ C89 wrapper around rtb_net client and server (multithreaded async using ASIO).
 Build using cmake or modify the build.sh script (if on a posix system):
 
 ```
-git clone --recurse-submodules https://github.com/moalyousef/crtb_net
+git clone https://github.com/moalyousef/crtb_net
 cd crtb_net
-cmake -B bin
+git submodule update --init
+cmake -B bin -DRTB_BUILD_EXAMPLES=ON
 camke --build bin
-./bin/client
-./bin/server
 ```
 or (for older cmake):
 ```
-git clone --recurse-submodules https://github.com/moalyousef/crtb_net
+git clone https://github.com/moalyousef/crtb_net
 cd crtb_net
+git submodule update --init
 mkdir bin && cd bin
-cmake ..
+cmake .. -DRTB_BUILD_EXAMPLES=ON
 make
-cd ..
-./bin/client
-./bin/server
 ```
 
 To build the ssl_client, pass the -DRTB_ENABLE_SSL=ON to cmake. 

@@ -24,7 +24,8 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Please enter a valid port\n");
     return -1;
   }
-
+  
+  /* requires proper certificates to function properly */
   server = rtb_ssl_server_init(ctx, argv[1], port, argv[3], 2);
   if (!server) {
     fprintf(stderr, "Failed to initialize server\n");
