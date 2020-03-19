@@ -5,11 +5,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(CMAKE_CXX_FLAGS "/std:c++17 /EHsc")
 else()
     set(CMAKE_CXX_FLAGS -std=c++17)
-    set(CMAKE_C_FLAGS -std=c89)
 endif()
 
-option(RTB_ENABLE_SSL "Finds and links OpenSSL" OFF)
-option(RTB_BUILD_EXAMPLES "Builds examples" OFF)
+option(RTB_ENABLE_SSL "Finds and links OpenSSL" ON)
+option(RTB_BUILD_EXAMPLES "Builds examples" ON)
 
 find_package(Threads REQUIRED)
 
@@ -19,7 +18,7 @@ endif()
 
 include_directories(include .ext/rtb/include)
 
-add_library(crtb_net STATIC libsrc/crtb_net.cpp)
+add_library(crtb_net STATIC src/crtb_net.cpp)
 
 if(RTB_ENABLE_SSL)
     target_compile_definitions(crtb_net PUBLIC rtb_ENABLE_SSL)
@@ -33,18 +32,17 @@ if(WIN32)
     target_link_libraries(crtb_net PUBLIC wsock32 ws2_32)
 endif()
 
-add_executable(main src/main.c)
-target_link_libraries(main PRIVATE crtb_net)
-
 if(RTB_BUILD_EXAMPLES)
     add_executable(server examples/server.c)
     add_executable(client examples/client.c)
     add_executable(downloader examples/downloader.c)
     add_executable(async_client examples/async_client.c)
+    add_executable(dir_lister examples/dir_lister.c)
     target_link_libraries(server PRIVATE crtb_net)
     target_link_libraries(client PRIVATE crtb_net)
     target_link_libraries(downloader PRIVATE crtb_net)
     target_link_libraries(async_client PRIVATE crtb_net)
+    target_link_libraries(dir_lister PRIVATE crtb_net)
     if(RTB_ENABLE_SSL)
         add_executable(ssl_client examples/ssl_client.c)
         add_executable(ssl_server examples/ssl_server.c)

@@ -2,12 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void async_get1(rtb_response **resp, rtb_client *client, void *args) {
-  *resp = rtb_client_get(client, "/");
-}
-
-void async_get2(rtb_response **resp, rtb_client *client, void *args) {
-  *resp = rtb_client_get(client, "/index.html");
+void async_get_cb(const rtb_response *resp, void *args) {
+  rtb_content *content = (rtb_content *)args;
+  *content = rtb_response_content(resp);
 }
 
 int main(void) {
@@ -16,28 +13,18 @@ int main(void) {
   rtb_content content1 = {0};
   rtb_content content2 = {0};
 
-  asio_io_context *io_context = asio_io_context_init(4);
-  if (!io_context)
-    return -1;
- 
   rtb_client *client = rtb_client_init();
   if (!client)
     return -1;
 
   rtb_client_set_host(client, "www.example.com", 80);
 
-  asio_post(io_context, &async_get1, &resp1, client, NULL);
+  rtb_client_async_get(client, "/", &async_get_cb, &content1);
 
-  asio_post(io_context, &async_get2, &resp2, client, NULL);
+  rtb_client_async_get(client, "/index.html", &async_get_cb, &content2);
 
-  asio_run(io_context);
-  
-  if (!resp1 || !resp2) return -1;
-
-  content1 = rtb_response_content(resp1);
   printf("%s\n", content1.value);
 
-  content2 = rtb_response_content(resp2);
   printf("%s\n", content2.value);
 
   /* cleanup */
@@ -47,5 +34,4 @@ int main(void) {
   rtb_response_free(resp1);
   rtb_response_free(resp2);
   rtb_client_free(client);
-  asio_io_context_free(io_context);
 }
