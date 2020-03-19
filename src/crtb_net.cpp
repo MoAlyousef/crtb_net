@@ -260,37 +260,54 @@ void rtb_request_free(rtb_request *request) {
 }
 
 char *rtb_request_headers_to_string(const rtb_request *req) {
-  auto temp = static_cast<const net::Request *>(req)->get_headers();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Request *>(req)->get_headers();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 char *rtb_request_method(const rtb_request *req) {
-  auto temp = static_cast<const net::Request *>(req)->method;
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Request *>(req)->method;
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 char *rtb_request_uri(const rtb_request *req) {
-  auto temp = static_cast<const net::Request *>(req)->uri;
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Request *>(req)->uri;
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 void rtb_request_get_headers(const rtb_request *req, rtb_header *headers,
                              unsigned int sz) {
-  auto hdrs = static_cast<const net::Request *>(req)->headers;
-  auto size = hdrs.size();
-  if (size > sz)
-    size = sz;
-  for (auto i = 0; i < size; i++) {
-    headers[i].name = (char *)malloc(hdrs[i].name.size() + 1);
-    strncpy(headers[i].name, hdrs[i].name.c_str(), hdrs[i].name.size() + 1);
-    headers[i].value = (char *)malloc(hdrs[i].value.size() + 1);
-    strncpy(headers[i].value, hdrs[i].value.c_str(), hdrs[i].value.size() + 1);
+  try {
+    auto hdrs = static_cast<const net::Request *>(req)->headers;
+    auto size = hdrs.size();
+    if (size > sz)
+      size = sz;
+    for (auto i = 0; i < size; i++) {
+      headers[i].name = (char *)malloc(hdrs[i].name.size() + 1);
+      strncpy(headers[i].name, hdrs[i].name.c_str(), hdrs[i].name.size() + 1);
+      headers[i].value = (char *)malloc(hdrs[i].value.size() + 1);
+      strncpy(headers[i].value, hdrs[i].value.c_str(),
+              hdrs[i].value.size() + 1);
+    }
+  } catch (...) {
+    return;
   }
 }
 
@@ -304,16 +321,20 @@ void rtb_request_headers_free(rtb_header *headers, unsigned int sz) {
 void rtb_request_get_regex_placeholders(const rtb_request *req,
                                         rtb_request_regex_placeholder *arr,
                                         unsigned int sz) {
-  auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
-  auto size = ph.size();
-  if (size > sz)
-    size = sz;
-  std::string val;
-  for (auto i = 0; i < size; i++) {
-    arr[i].key = i;
-    val = ph.at(i);
-    arr[i].value = (char *)malloc(val.size() + 1);
-    strncpy(arr[i].value, val.c_str(), val.size() + 1);
+  try {
+    auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
+    auto size = ph.size();
+    if (size > sz)
+      size = sz;
+    std::string val;
+    for (auto i = 0; i < size; i++) {
+      arr[i].key = i;
+      val = ph.at(i);
+      arr[i].value = (char *)malloc(val.size() + 1);
+      strncpy(arr[i].value, val.c_str(), val.size() + 1);
+    }
+  } catch (...) {
+    return;
   }
 }
 
@@ -327,22 +348,26 @@ void rtb_request_regex_placeholders_free(
 void rtb_request_get_placeholders(const rtb_request *req,
                                   rtb_request_placeholder *arr,
                                   unsigned int sz) {
-  auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
-  auto size = ph.size();
-  if (size > sz)
-    size = sz;
-  int i = 0;
-  std::string key, val;
-  for (auto kv : ph) {
-    if (i == size)
-      break;
-    key = std::get<std::string>(kv.first);
-    val = kv.second;
-    arr[i].key = (char *)malloc(key.size() + 1);
-    arr[i].value = (char *)malloc(val.size() + 1);
-    strncpy(arr[i].key, key.c_str(), key.size() + 1);
-    strncpy(arr[i].value, val.c_str(), val.size() + 1);
-    i++;
+  try {
+    auto ph = static_cast<const net::Request *>(req)->uri_placeholders;
+    auto size = ph.size();
+    if (size > sz)
+      size = sz;
+    int i = 0;
+    std::string key, val;
+    for (auto kv : ph) {
+      if (i == size)
+        break;
+      key = std::get<std::string>(kv.first);
+      val = kv.second;
+      arr[i].key = (char *)malloc(key.size() + 1);
+      arr[i].value = (char *)malloc(val.size() + 1);
+      strncpy(arr[i].key, key.c_str(), key.size() + 1);
+      strncpy(arr[i].value, val.c_str(), val.size() + 1);
+      i++;
+    }
+  } catch (...) {
+    return;
   }
 }
 
@@ -355,17 +380,25 @@ void rtb_request_placeholders_free(rtb_request_placeholder *placeholders,
 }
 
 char *rtb_request_body(const rtb_request *req) {
-  auto temp = static_cast<const net::Request *>(req)->body();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Request *>(req)->body();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 char *rtb_request_body_decoded(const rtb_request *req) {
-  auto temp = static_cast<const net::Request *>(req)->body_decoded();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Request *>(req)->body_decoded();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 // response code
@@ -373,9 +406,8 @@ char *rtb_request_body_decoded(const rtb_request *req) {
 rtb_response *rtb_response_init() { return new (std::nothrow) net::Response(); }
 
 rtb_response *rtb_response_await(rtb_future_response *future_resp) {
-  return new(std::nothrow) net::Response(static_cast<std::future<net::Response> *>(
-             future_resp)
-      ->get());
+  return new (std::nothrow) net::Response(
+      static_cast<std::future<net::Response> *>(future_resp)->get());
 }
 
 void rtb_response_free(rtb_response *response) {
@@ -406,13 +438,19 @@ void rtb_response_connection_alive(rtb_response *res, int boolean) {
 }
 
 const rtb_content rtb_response_content(const rtb_response *res) {
-  auto temp = static_cast<const net::Response *>(res)->content();
-  rtb_content content;
-  unsigned int sz = temp.size();
-  content.value = (char *)malloc(sz + 1);
-  content.size = sz;
-  std::memcpy(content.value, &temp[0], sz);
-  content.value[sz] = '\0';
+  rtb_content content = {0};
+  try {
+    std::string temp = "";
+    unsigned int sz = 0;
+    temp = static_cast<const net::Response *>(res)->content();
+    sz = temp.size();
+    content.value = (char *)malloc(sz + 1);
+    content.size = sz;
+    std::memcpy(content.value, &temp[0], sz);
+    content.value[sz] = '\0';
+  } catch (...) {
+    //
+  }
   return content;
 }
 
@@ -429,10 +467,14 @@ void rtb_response_set_content_length(rtb_response *res, unsigned int length) {
 }
 
 char *rtb_response_content_type(const rtb_response *res) {
-  auto temp = static_cast<const net::Response *>(res)->content_type();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Response *>(res)->content_type();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 void rtb_response_set_content_type(rtb_response *res,
@@ -441,24 +483,36 @@ void rtb_response_set_content_type(rtb_response *res,
 }
 
 char *rtb_response_protocol(const rtb_response *res) {
-  auto temp = static_cast<const net::Response *>(res)->protocol();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Response *>(res)->protocol();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 char *rtb_response_location(const rtb_response *res) {
-  auto temp = static_cast<const net::Response *>(res)->location();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Response *>(res)->location();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 char *rtb_response_headers_to_string(const rtb_response *res) {
-  auto temp = static_cast<const net::Response *>(res)->get_headers();
-  char *ret = (char *)malloc(temp.size() + 1);
-  strncpy(ret, temp.c_str(), temp.size() + 1);
-  return ret;
+  try {
+    auto temp = static_cast<const net::Response *>(res)->get_headers();
+    char *ret = (char *)malloc(temp.size() + 1);
+    strncpy(ret, temp.c_str(), temp.size() + 1);
+    return ret;
+  } catch (...) {
+    return NULL;
+  }
 }
 
 #ifdef rtb_ENABLE_SSL
@@ -645,23 +699,23 @@ void rtb_ssl_client_delete_async(rtb_ssl_client *client, const char *path,
 }
 
 rtb_future_response *rtb_ssl_client_get_future(rtb_ssl_client *client,
-                                           const char *path) {
+                                               const char *path) {
   return new (std::nothrow) std::future<net::Response>(
       static_cast<net::HttpsClient *>(client)->async_get(path,
-                                                        asio::use_future));
-}
-
-rtb_future_response *rtb_ssl_client_head_future(rtb_ssl_client *client,
-                                            const char *path) {
-  return new (std::nothrow) std::future<net::Response>(
-      static_cast<net::HttpsClient *>(client)->async_head(path,
                                                          asio::use_future));
 }
 
+rtb_future_response *rtb_ssl_client_head_future(rtb_ssl_client *client,
+                                                const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpsClient *>(client)->async_head(path,
+                                                          asio::use_future));
+}
+
 rtb_future_response *rtb_ssl_client_post_future(rtb_ssl_client *client,
-                                            const char *path,
-                                            enum rtb_post_type type,
-                                            const char *msg) {
+                                                const char *path,
+                                                enum rtb_post_type type,
+                                                const char *msg) {
   return new (std::nothrow) std::future<net::Response>(
       static_cast<net::HttpsClient *>(client)->async_post(
           path, static_cast<net::PostContentType>(type), msg,
@@ -669,17 +723,17 @@ rtb_future_response *rtb_ssl_client_post_future(rtb_ssl_client *client,
 }
 
 rtb_future_response *rtb_ssl_client_put_future(rtb_ssl_client *client,
-                                           const char *path) {
+                                               const char *path) {
   return new (std::nothrow) std::future<net::Response>(
       static_cast<net::HttpsClient *>(client)->async_put(path,
-                                                        asio::use_future));
+                                                         asio::use_future));
 }
 
 rtb_future_response *rtb_ssl_client_delete_future(rtb_ssl_client *client,
-                                              const char *path) {
+                                                  const char *path) {
   return new (std::nothrow) std::future<net::Response>(
       static_cast<net::HttpsClient *>(client)->async_delete(path,
-                                                           asio::use_future));
+                                                            asio::use_future));
 }
 
 #endif
