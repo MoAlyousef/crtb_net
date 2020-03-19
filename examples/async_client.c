@@ -8,8 +8,6 @@ void async_get_cb(const rtb_response *resp, void *args) {
 }
 
 int main(void) {
-  rtb_response *resp1 = NULL;
-  rtb_response *resp2 = NULL;
   rtb_content content1 = {0};
   rtb_content content2 = {0};
 
@@ -31,7 +29,5 @@ int main(void) {
 
   free(content1.value);
   free(content2.value);
-  rtb_response_free(resp1);
-  rtb_response_free(resp2);
   rtb_client_free(client);
 }
