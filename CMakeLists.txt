@@ -1,18 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
-project(crtb_net_examples)
+project(crtb_net VERSION 0.0.1)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(CMAKE_CXX_FLAGS "/std:c++17 /EHsc")
-else()
-    set(CMAKE_CXX_FLAGS -std=c++17)
-endif()
-
-option(RTB_ENABLE_SSL "Finds and links OpenSSL" ON)
-option(RTB_BUILD_EXAMPLES "Builds examples" ON)
+option(CRTB_ENABLE_SSL "Finds and links OpenSSL" OFF)
+option(CRTB_BUILD_EXAMPLES "Builds examples" OFF)
 
 find_package(Threads REQUIRED)
 
-if(RTB_ENABLE_SSL)
+if(CRTB_ENABLE_SSL)
     find_package(OpenSSL REQUIRED)
 endif()
 
@@ -20,8 +14,10 @@ include_directories(include .ext/rtb/include)
 
 add_library(crtb_net STATIC src/crtb_net.cpp)
 
-if(RTB_ENABLE_SSL)
-    target_compile_definitions(crtb_net PUBLIC rtb_ENABLE_SSL)
+set_target_properties(crtb_net PROPERTIES CXX_STANDARD 17)
+
+if(CRTB_ENABLE_SSL)
+    target_compile_definitions(crtb_net PUBLIC RTB_ENABLE_SSL)
     target_link_libraries(crtb_net PUBLIC Threads::Threads OpenSSL::Crypto OpenSSL::SSL)
 else()
     target_link_libraries(crtb_net PUBLIC Threads::Threads)
@@ -32,23 +28,34 @@ if(WIN32)
     target_link_libraries(crtb_net PUBLIC wsock32 ws2_32)
 endif()
 
-if(RTB_BUILD_EXAMPLES)
-    add_executable(server examples/server.c)
-    add_executable(client examples/client.c)
-    add_executable(downloader examples/downloader.c)
-    add_executable(async_client examples/async_client.c)
-    add_executable(async_client2 examples/async_client2.c)
-    add_executable(dir_lister examples/dir_lister.c)
-    target_link_libraries(server PRIVATE crtb_net)
-    target_link_libraries(client PRIVATE crtb_net)
-    target_link_libraries(downloader PRIVATE crtb_net)
-    target_link_libraries(async_client PRIVATE crtb_net)
-    target_link_libraries(async_client2 PRIVATE crtb_net)
-    target_link_libraries(dir_lister PRIVATE crtb_net)
-    if(RTB_ENABLE_SSL)
-        add_executable(ssl_client examples/ssl_client.c)
-        add_executable(ssl_server examples/ssl_server.c)
-        target_link_libraries(ssl_client PRIVATE crtb_net)
-        target_link_libraries(ssl_server PRIVATE crtb_net)
-    endif()
+target_include_directories(
+    crtb_net
+    INTERFACE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${PROJECT_BINARY_DIR}/crtb_netConfigVersion.cmake" 
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+
+install(TARGETS crtb_net
+    EXPORT crtb_netTargets
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+configure_package_config_file(
+    "${PROJECT_SOURCE_DIR}/cmake/crtb_netConfig.cmake.in"
+    "${PROJECT_BINARY_DIR}/crtb_netConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/crtb_net
+)
+
+install(EXPORT crtb_netTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/crtb_net)
+install(FILES "${PROJECT_BINARY_DIR}/crtb_netConfig.cmake" "${PROJECT_BINARY_DIR}/crtb_netConfigVersion.cmake" DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/crtb_net)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/include" DESTINATION .)
+
+if(CRTB_BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif()

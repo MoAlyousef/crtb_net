@@ -25,7 +25,7 @@ SOFTWARE.
 
 #pragma once
 
-#ifdef rtb_ENABLE_SSL
+#ifdef RTB_ENABLE_SSL
 #include <openssl/ssl.h>
 #endif
 
@@ -246,7 +246,7 @@ char *rtb_response_location(const rtb_response *res);
 
 char *rtb_response_headers_to_string(const rtb_response *res);
 
-#ifdef rtb_ENABLE_SSL
+#ifdef RTB_ENABLE_SSL
 
 /*
   ssl server
@@ -301,20 +301,20 @@ rtb_response *rtb_ssl_client_put(rtb_ssl_client *client, const char *path);
 rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path);
 
 void rtb_ssl_client_get_async(rtb_ssl_client *client, const char *path,
-                              rtb_ssl_client_continuation cb, void *args);
+                              rtb_client_continuation cb, void *args);
 
 void rtb_ssl_client_head_async(rtb_ssl_client *client, const char *path,
-                               rtb_ssl_client_continuation cb, void *args);
+                               rtb_client_continuation cb, void *args);
 
 void rtb_ssl_client_post_async(rtb_ssl_client *client, const char *path,
                                enum rtb_post_type type, const char *msg,
-                               rtb_ssl_client_continuation cb, void *args);
+                               rtb_client_continuation cb, void *args);
 
 void rtb_ssl_client_put_async(rtb_ssl_client *client, const char *path,
-                              rtb_ssl_client_continuation cb, void *args);
+                              rtb_client_continuation cb, void *args);
 
 void rtb_ssl_client_delete_async(rtb_ssl_client *client, const char *path,
-                                 rtb_ssl_client_continuation cb, void *args);
+                                 rtb_client_continuation cb, void *args);
 
 rtb_future_response *rtb_ssl_client_get_future(rtb_ssl_client *client,
                                                const char *path);

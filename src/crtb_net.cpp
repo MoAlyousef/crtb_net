@@ -515,7 +515,7 @@ char *rtb_response_headers_to_string(const rtb_response *res) {
   }
 }
 
-#ifdef rtb_ENABLE_SSL
+#ifdef RTB_ENABLE_SSL
 
 rtb_ssl_server *rtb_ssl_server_init(SSL_CTX *ctx, const char *host,
                                     unsigned int port, const char *docroot,
@@ -557,7 +557,7 @@ int rtb_ssl_server_run(rtb_ssl_server *server) {
 
 rtb_ssl_client *rtb_ssl_client_init(SSL_CTX *ctx) {
   asio::ssl::context temp(ctx);
-  return new (std::nothrow) net::HttpsClient(net::HttpsClient(ctx));
+  return new (std::nothrow) net::HttpsClient(temp);
 }
 
 void rtb_ssl_client_free(rtb_ssl_client *client) {
@@ -647,7 +647,7 @@ rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path) {
 }
 
 void rtb_ssl_client_get_async(rtb_ssl_client *client, const char *path,
-                              rtb_ssl_client_continuation cb, void *args) {
+                              rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_get(
         path, [=](const net::Response &res) { cb(&res, args); });
@@ -657,7 +657,7 @@ void rtb_ssl_client_get_async(rtb_ssl_client *client, const char *path,
 }
 
 void rtb_ssl_client_head_async(rtb_ssl_client *client, const char *path,
-                               rtb_ssl_client_continuation cb, void *args) {
+                               rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_head(
         path, [=](const net::Response &res) { cb(&res, args); });
@@ -667,7 +667,7 @@ void rtb_ssl_client_head_async(rtb_ssl_client *client, const char *path,
 }
 
 void rtb_ssl_client_put_async(rtb_ssl_client *client, const char *path,
-                              rtb_ssl_client_continuation cb, void *args) {
+                              rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_put(
         path, [=](const net::Response &res) { cb(&res, args); });
@@ -678,7 +678,7 @@ void rtb_ssl_client_put_async(rtb_ssl_client *client, const char *path,
 
 void rtb_ssl_client_post_async(rtb_ssl_client *client, const char *path,
                                enum rtb_post_type type, const char *msg,
-                               rtb_ssl_client_continuation cb, void *args) {
+                               rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_post(
         path, static_cast<net::PostContentType>(type), msg,
