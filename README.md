@@ -7,7 +7,7 @@ Build using cmake or modify the build.sh script (if on a posix system):
 git clone https://github.com/moalyousef/crtb_net
 cd crtb_net
 git submodule update --init
-cmake -B bin -DRTB_BUILD_EXAMPLES=ON
+cmake -B bin -DCRTB_BUILD_EXAMPLES=ON
 camke --build bin
 ```
 or (for older cmake):
@@ -16,7 +16,7 @@ git clone https://github.com/moalyousef/crtb_net
 cd crtb_net
 git submodule update --init
 mkdir bin && cd bin
-cmake .. -DRTB_BUILD_EXAMPLES=ON
+cmake .. -DCRTB_BUILD_EXAMPLES=ON
 make
 ```
 
