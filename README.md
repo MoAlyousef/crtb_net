@@ -24,7 +24,7 @@ To build the ssl_client, pass the -DCRTB_ENABLE_SSL=ON to cmake.
 
 The server example should listen on 127.0.0.1:8000 and should serve the pages in the docroot statically. Also any request to 127.0.0.1:8000/hello/{name} with the name placeholder accepting any string since it has an explicit handler.
 
-```
+```c
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
   char content[200];
   rtb_request_placeholder placeholders[1];
@@ -45,7 +45,7 @@ int main() {
 }
 ```
 A minimal static server:
-```
+```c
 int main() {
   rtb_server *server = rtb_server_init("127.0.0.1", 8000, "wwwroot", 2);
   return rtb_server_run(server);
@@ -54,7 +54,7 @@ int main() {
 
 
 The client example should get and print the index page of www.example.com, the client supports proxy and authentication.
-```
+```c
 int main() {
   rtb_client *client = rtb_client_init();
   rtb_client_set_host(client, "www.example.com", 80);
