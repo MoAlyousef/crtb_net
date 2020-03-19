@@ -20,7 +20,7 @@ cmake .. -DCRTB_BUILD_EXAMPLES=ON
 make
 ```
 
-To build the ssl_client, pass the -DRTB_ENABLE_SSL=ON to cmake. 
+To build the ssl_client, pass the -DCRTB_ENABLE_SSL=ON to cmake. 
 
 The server example should listen on 127.0.0.1:8000 and should serve the pages in the docroot statically. Also any request to 127.0.0.1:8000/hello/{name} with the name placeholder accepting any string since it has an explicit handler.
 
