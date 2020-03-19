@@ -7,14 +7,18 @@
 void hello_handler(const rtb_request *req, rtb_response *resp, void *args);
 
 int main(void) {
+  unsigned int thread_count = 0;
+  rtb_server *server = NULL;
+
   /* == nproc, calls std::thread::hardware_concurrency() */
-  unsigned int thread_count = rtb_hardware_concurrency();
+  thread_count = rtb_hardware_concurrency();
+
   /* init signature: (host, port, document_root, thread_count)
      the server would now automatically serve statically from docroot */
-  rtb_server *server =
-      rtb_server_init("localhost", 8000, "examples/wwwroot", thread_count);
+  server = rtb_server_init("localhost", 8000, "examples/wwwroot", thread_count);
   if (!server)
     return -1;
+
   /* route signature: (server, verb, uri with optional placeholders, handler,
      captured args) this allows dynamic request handling try address
      127.0.0.1:8000/hello/anyname */
@@ -44,8 +48,11 @@ void hello_handler(const rtb_request *req, rtb_response *resp, void *args) {
 
   /* setting the response status in a handler is optional for OK */
   rtb_response_set_status(resp, 200);
+
   /* setting content will automatically set content_length */
   rtb_response_set_content(resp, content);
-  /* cleanup of placeholder char* members which were allocated in rtb_request_get_placeholders */
+  
+  /* cleanup of placeholder char* members which were allocated in
+   * rtb_request_get_placeholders */
   rtb_request_placeholders_free(placeholders, 1);
 }

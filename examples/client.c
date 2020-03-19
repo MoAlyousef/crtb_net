@@ -6,11 +6,12 @@
 #define FALSE 0
 
 int main(void) {
+  rtb_client *client = NULL;
   rtb_response *resp = NULL;
   char *headers = NULL;
   rtb_content content = {0};
 
-  rtb_client *client = rtb_client_init();
+  client = rtb_client_init();
   if (!client)
     return -1;
 

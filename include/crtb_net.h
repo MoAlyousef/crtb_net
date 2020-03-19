@@ -41,6 +41,8 @@ typedef void rtb_request;
 
 typedef void rtb_response;
 
+typedef void rtb_future_response;
+
 typedef void rtb_server;
 
 typedef void rtb_client;
@@ -135,21 +137,38 @@ rtb_response *rtb_client_put(rtb_client *client, const char *path);
 
 rtb_response *rtb_client_delete(rtb_client *client, const char *path);
 
-void rtb_client_async_get(rtb_client *client, const char *path,
+void rtb_client_get_async(rtb_client *client, const char *path,
                           rtb_client_continuation cb, void *args);
 
-void rtb_client_async_head(rtb_client *client, const char *path,
+void rtb_client_head_async(rtb_client *client, const char *path,
                            rtb_client_continuation cb, void *args);
 
-void rtb_client_async_post(rtb_client *client, const char *path,
+void rtb_client_post_async(rtb_client *client, const char *path,
                            enum rtb_post_type type, const char *msg,
                            rtb_client_continuation cb, void *args);
 
-void rtb_client_async_put(rtb_client *client, const char *path,
+void rtb_client_put_async(rtb_client *client, const char *path,
                           rtb_client_continuation cb, void *args);
 
-void rtb_client_async_delete(rtb_client *client, const char *path,
+void rtb_client_delete_async(rtb_client *client, const char *path,
                              rtb_client_continuation cb, void *args);
+
+rtb_future_response *rtb_client_get_future(rtb_client *client,
+                                           const char *path);
+
+rtb_future_response *rtb_client_head_future(rtb_client *client,
+                                            const char *path);
+
+rtb_future_response *rtb_client_post_future(rtb_client *client,
+                                            const char *path,
+                                            enum rtb_post_type type,
+                                            const char *msg);
+
+rtb_future_response *rtb_client_put_future(rtb_client *client,
+                                           const char *path);
+
+rtb_future_response *rtb_client_delete_future(rtb_client *client,
+                                              const char *path);
 
 /*
   Request code
@@ -194,7 +213,11 @@ char *rtb_request_body_decoded(const rtb_request *req);
 
 rtb_response *rtb_response_init(void);
 
+rtb_response *rtb_response_await(rtb_future_response *future_resp);
+
 void rtb_response_free(rtb_response *response);
+
+void rtb_future_response_free(rtb_future_response *future_resp);
 
 int rtb_response_status(const rtb_response *res);
 
@@ -277,21 +300,38 @@ rtb_response *rtb_ssl_client_put(rtb_ssl_client *client, const char *path);
 
 rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path);
 
-void rtb_ssl_client_async_get(rtb_ssl_client *client, const char *path,
-                          rtb_ssl_client_continuation cb, void *args);
+void rtb_ssl_client_get_async(rtb_ssl_client *client, const char *path,
+                              rtb_ssl_client_continuation cb, void *args);
 
-void rtb_ssl_client_async_head(rtb_ssl_client *client, const char *path,
-                           rtb_ssl_client_continuation cb, void *args);
+void rtb_ssl_client_head_async(rtb_ssl_client *client, const char *path,
+                               rtb_ssl_client_continuation cb, void *args);
 
-void rtb_ssl_client_async_post(rtb_ssl_client *client, const char *path,
-                           enum rtb_post_type type, const char *msg,
-                           rtb_ssl_client_continuation cb, void *args);
+void rtb_ssl_client_post_async(rtb_ssl_client *client, const char *path,
+                               enum rtb_post_type type, const char *msg,
+                               rtb_ssl_client_continuation cb, void *args);
 
-void rtb_ssl_client_async_put(rtb_ssl_client *client, const char *path,
-                          rtb_ssl_client_continuation cb, void *args);
+void rtb_ssl_client_put_async(rtb_ssl_client *client, const char *path,
+                              rtb_ssl_client_continuation cb, void *args);
 
-void rtb_ssl_client_async_delete(rtb_ssl_client *client, const char *path,
-                             rtb_ssl_client_continuation cb, void *args);
+void rtb_ssl_client_delete_async(rtb_ssl_client *client, const char *path,
+                                 rtb_ssl_client_continuation cb, void *args);
+
+rtb_future_response *rtb_ssl_client_get_future(rtb_ssl_client *client,
+                                               const char *path);
+
+rtb_future_response *rtb_ssl_client_head_future(rtb_ssl_client *client,
+                                                const char *path);
+
+rtb_future_response *rtb_ssl_client_post_future(rtb_ssl_client *client,
+                                                const char *path,
+                                                enum rtb_post_type type,
+                                                const char *msg);
+
+rtb_future_response *rtb_ssl_client_put_future(rtb_ssl_client *client,
+                                               const char *path);
+
+rtb_future_response *rtb_ssl_client_delete_future(rtb_ssl_client *client,
+                                                  const char *path);
 
 #endif
 

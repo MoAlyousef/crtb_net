@@ -25,6 +25,7 @@ SOFTWARE.
 #include "crtb_net.h"
 #include "rtb_net.hpp"
 #include <cstring>
+#include <future>
 #include <new>
 
 using namespace rtb;
@@ -159,7 +160,7 @@ rtb_response *rtb_client_delete(rtb_client *client, const char *path) {
   }
 }
 
-void rtb_client_async_get(rtb_client *client, const char *path,
+void rtb_client_get_async(rtb_client *client, const char *path,
                           rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpClient *>(client)->async_get(
@@ -169,7 +170,7 @@ void rtb_client_async_get(rtb_client *client, const char *path,
   }
 }
 
-void rtb_client_async_head(rtb_client *client, const char *path,
+void rtb_client_head_async(rtb_client *client, const char *path,
                            rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpClient *>(client)->async_head(
@@ -179,7 +180,7 @@ void rtb_client_async_head(rtb_client *client, const char *path,
   }
 }
 
-void rtb_client_async_put(rtb_client *client, const char *path,
+void rtb_client_put_async(rtb_client *client, const char *path,
                           rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpClient *>(client)->async_put(
@@ -189,7 +190,7 @@ void rtb_client_async_put(rtb_client *client, const char *path,
   }
 }
 
-void rtb_client_async_post(rtb_client *client, const char *path,
+void rtb_client_post_async(rtb_client *client, const char *path,
                            enum rtb_post_type type, const char *msg,
                            rtb_client_continuation cb, void *args) {
   try {
@@ -201,7 +202,7 @@ void rtb_client_async_post(rtb_client *client, const char *path,
   }
 }
 
-void rtb_client_async_delete(rtb_client *client, const char *path,
+void rtb_client_delete_async(rtb_client *client, const char *path,
                              rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpClient *>(client)->async_delete(
@@ -209,6 +210,44 @@ void rtb_client_async_delete(rtb_client *client, const char *path,
   } catch (...) {
     return;
   }
+}
+
+rtb_future_response *rtb_client_get_future(rtb_client *client,
+                                           const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpClient *>(client)->async_get(path,
+                                                        asio::use_future));
+}
+
+rtb_future_response *rtb_client_head_future(rtb_client *client,
+                                            const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpClient *>(client)->async_head(path,
+                                                         asio::use_future));
+}
+
+rtb_future_response *rtb_client_post_future(rtb_client *client,
+                                            const char *path,
+                                            enum rtb_post_type type,
+                                            const char *msg) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpClient *>(client)->async_post(
+          path, static_cast<net::PostContentType>(type), msg,
+          asio::use_future));
+}
+
+rtb_future_response *rtb_client_put_future(rtb_client *client,
+                                           const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpClient *>(client)->async_put(path,
+                                                        asio::use_future));
+}
+
+rtb_future_response *rtb_client_delete_future(rtb_client *client,
+                                              const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpClient *>(client)->async_delete(path,
+                                                           asio::use_future));
 }
 
 // request code
@@ -333,9 +372,20 @@ char *rtb_request_body_decoded(const rtb_request *req) {
 
 rtb_response *rtb_response_init() { return new (std::nothrow) net::Response(); }
 
+rtb_response *rtb_response_await(rtb_future_response *future_resp) {
+  return new(std::nothrow) net::Response(static_cast<std::future<net::Response> *>(
+             future_resp)
+      ->get());
+}
+
 void rtb_response_free(rtb_response *response) {
   delete static_cast<net::Response *>(response);
   response = NULL;
+}
+
+void rtb_future_response_free(rtb_future_response *future_resp) {
+  delete static_cast<std::future<net::Response> *>(future_resp);
+  future_resp = NULL;
 }
 
 int rtb_response_status(const rtb_response *res) {
@@ -542,9 +592,8 @@ rtb_response *rtb_ssl_client_delete(rtb_ssl_client *client, const char *path) {
   }
 }
 
-
-void rtb_ssl_client_async_get(rtb_ssl_client *client, const char *path,
-                          rtb_ssl_client_continuation cb, void *args) {
+void rtb_ssl_client_get_async(rtb_ssl_client *client, const char *path,
+                              rtb_ssl_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_get(
         path, [=](const net::Response &res) { cb(&res, args); });
@@ -553,8 +602,8 @@ void rtb_ssl_client_async_get(rtb_ssl_client *client, const char *path,
   }
 }
 
-void rtb_ssl_client_async_head(rtb_ssl_client *client, const char *path,
-                           rtb_ssl_client_continuation cb, void *args) {
+void rtb_ssl_client_head_async(rtb_ssl_client *client, const char *path,
+                               rtb_ssl_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_head(
         path, [=](const net::Response &res) { cb(&res, args); });
@@ -563,8 +612,8 @@ void rtb_ssl_client_async_head(rtb_ssl_client *client, const char *path,
   }
 }
 
-void rtb_ssl_client_async_put(rtb_ssl_client *client, const char *path,
-                          rtb_ssl_client_continuation cb, void *args) {
+void rtb_ssl_client_put_async(rtb_ssl_client *client, const char *path,
+                              rtb_ssl_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_put(
         path, [=](const net::Response &res) { cb(&res, args); });
@@ -573,9 +622,9 @@ void rtb_ssl_client_async_put(rtb_ssl_client *client, const char *path,
   }
 }
 
-void rtb_ssl_client_async_post(rtb_ssl_client *client, const char *path,
-                           enum rtb_post_type type, const char *msg,
-                           rtb_ssl_client_continuation cb, void *args) {
+void rtb_ssl_client_post_async(rtb_ssl_client *client, const char *path,
+                               enum rtb_post_type type, const char *msg,
+                               rtb_ssl_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_post(
         path, static_cast<net::PostContentType>(type), msg,
@@ -585,14 +634,52 @@ void rtb_ssl_client_async_post(rtb_ssl_client *client, const char *path,
   }
 }
 
-void rtb_ssl_client_async_delete(rtb_ssl_client *client, const char *path,
-                             rtb_client_continuation cb, void *args) {
+void rtb_ssl_client_delete_async(rtb_ssl_client *client, const char *path,
+                                 rtb_client_continuation cb, void *args) {
   try {
     static_cast<net::HttpsClient *>(client)->async_delete(
         path, [=](const net::Response &res) { cb(&res, args); });
   } catch (...) {
     return;
   }
+}
+
+rtb_future_response *rtb_ssl_client_get_future(rtb_ssl_client *client,
+                                           const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpsClient *>(client)->async_get(path,
+                                                        asio::use_future));
+}
+
+rtb_future_response *rtb_ssl_client_head_future(rtb_ssl_client *client,
+                                            const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpsClient *>(client)->async_head(path,
+                                                         asio::use_future));
+}
+
+rtb_future_response *rtb_ssl_client_post_future(rtb_ssl_client *client,
+                                            const char *path,
+                                            enum rtb_post_type type,
+                                            const char *msg) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpsClient *>(client)->async_post(
+          path, static_cast<net::PostContentType>(type), msg,
+          asio::use_future));
+}
+
+rtb_future_response *rtb_ssl_client_put_future(rtb_ssl_client *client,
+                                           const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpsClient *>(client)->async_put(path,
+                                                        asio::use_future));
+}
+
+rtb_future_response *rtb_ssl_client_delete_future(rtb_ssl_client *client,
+                                              const char *path) {
+  return new (std::nothrow) std::future<net::Response>(
+      static_cast<net::HttpsClient *>(client)->async_delete(path,
+                                                           asio::use_future));
 }
 
 #endif
